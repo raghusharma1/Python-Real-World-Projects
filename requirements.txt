@@ -1,0 +1,7 @@
+beautifulsoup4
+behave
+bottle
+pytest
+Requests
+toml
+typ

@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title id="head-title">index.html</title>
+      <link href="assets/style.css" rel="stylesheet" type="text/css"/>
+  </head>
+  <body>
+    <h1 id="title">index.html</h1>
+    <p>Report generated on 22-Apr-2025 at 07:32:19 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a>
+        v4.1.1</p>
+    <div id="environment-header">
+      <h2>Environment</h2>
+    </div>
+    <table id="environment"></table>
+    <!-- TEMPLATES -->
+      <template id="template_environment_row">
+      <tr>
+        <td></td>
+        <td></td>
+      </tr>
+    </template>
+    <template id="template_results-table__body--empty">
+      <tbody class="results-table-row">
+        <tr id="not-found-message">
+          <td colspan="4">No results found. Check the filters.</th>
+        </tr>
+    </template>
+    <template id="template_results-table__tbody">
+      <tbody class="results-table-row">
+        <tr class="collapsible">
+        </tr>
+        <tr class="extras-row">
+          <td class="extra" colspan="4">
+            <div class="extraHTML"></div>
+            <div class="media">
+              <div class="media-container">
+                  <div class="media-container__nav--left"><</div>
+                  <div class="media-container__viewport">
+                    <img src="" />
+                    <video controls>
+                      <source src="" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="media-container__nav--right">></div>
+                </div>
+                <div class="media__name"></div>
+                <div class="media__counter"></div>
+            </div>
+            <div class="logwrapper">
+              <div class="logexpander"></div>
+              <div class="log"></div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </template>
+    <!-- END TEMPLATES -->
+    <div class="summary">
+      <div class="summary__data">
+        <h2>Summary</h2>
+        <div class="additional-summary prefix">
+        </div>
+        <p class="run-count">39 tests took 32 ms.</p>
+        <p class="filter">(Un)check the boxes to filter the results.</p>
+        <div class="summary__reload">
+          <div class="summary__reload__button hidden" onclick="location.reload()">
+            <div>There are still tests running. <br />Reload this page to get the latest results!</div>
+          </div>
+        </div>
+        <div class="summary__spacer"></div>
+        <div class="controls">
+          <div class="filters">
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="failed" />
+            <span class="failed">14 Failed,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="passed" />
+            <span class="passed">25 Passed,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="skipped" disabled/>
+            <span class="skipped">0 Skipped,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xfailed" disabled/>
+            <span class="xfailed">0 Expected failures,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xpassed" disabled/>
+            <span class="xpassed">0 Unexpected passes,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="error" />
+            <span class="error">4 Errors,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="rerun" disabled/>
+            <span class="rerun">0 Reruns</span>
+          </div>
+          <div class="collapse">
+            <button id="show_all_details">Show all details</button>&nbsp;/&nbsp;<button id="hide_all_details">Hide all details</button>
+          </div>
+        </div>
+      </div>
+      <div class="additional-summary summary">
+      </div>
+      <div class="additional-summary postfix">
+      </div>
+    </div>
+    <table id="results-table">
+      <thead id="results-table-head">
+        <tr>
+          <th class="sortable" data-column-type="result">Result</th>
+          <th class="sortable" data-column-type="testId">Test</th>
+          <th class="sortable" data-column-type="duration">Duration</th>
+          <th>Links</th>
+        </tr>
+      </thead>
+    </table>
+  </body>
+  <footer>
+    <div id="data-container" data-jsonblob="{&#34;environment&#34;: {&#34;Python&#34;: &#34;3.12.10&#34;, &#34;Platform&#34;: &#34;Linux-6.8.0-1025-azure-x86_64-with&#34;, &#34;Packages&#34;: {&#34;pytest&#34;: &#34;8.3.5&#34;, &#34;pluggy&#34;: &#34;1.5.0&#34;}, &#34;Plugins&#34;: {&#34;metadata&#34;: &#34;3.1.1&#34;, &#34;html&#34;: &#34;4.1.1&#34;}}, &#34;tests&#34;: {&#34;project_0/src/test_HelloWorldGetOptions.py::Test_HelloWorldGetOptions::test_get_options_default_value_when_no_args_provided&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HelloWorldGetOptions.py::Test_HelloWorldGetOptions::test_get_options_default_value_when_no_args_provided&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HelloWorldGetOptions.py::Test_HelloWorldGetOptions::test_get_options_default_value_when_no_args_provided&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;project_0/src/test_HelloWorldGetOptions.py::Test_HelloWorldGetOptions::test_get_options_long_option_provided&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HelloWorldGetOptions.py::Test_HelloWorldGetOptions::test_get_options_long_option_provided&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HelloWorldGetOptions.py::Test_HelloWorldGetOptions::test_get_options_long_option_provided&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;project_0/src/test_HelloWorldGetOptions.py::Test_HelloWorldGetOptions::test_get_options_short_option_provided&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HelloWorldGetOptions.py::Test_HelloWorldGetOptions::test_get_options_short_option_provided&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HelloWorldGetOptions.py::Test_HelloWorldGetOptions::test_get_options_short_option_provided&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;project_0/src/test_HelloWorldGetOptions.py::Test_HelloWorldGetOptions::test_get_options_unrecognized_argument_raises_error&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HelloWorldGetOptions.py::Test_HelloWorldGetOptions::test_get_options_unrecognized_argument_raises_error&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HelloWorldGetOptions.py::Test_HelloWorldGetOptions::test_get_options_unrecognized_argument_raises_error&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stderr call -----------------------------\nusage: __main__.py [-h] [--who WHO]\n__main__.py: error: unrecognized arguments: --unknown argument\n&#34;}], &#34;project_0/src/test_HelloWorldGetOptions.py::Test_HelloWorldGetOptions::test_get_options_missing_value_for_option_raises_error&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HelloWorldGetOptions.py::Test_HelloWorldGetOptions::test_get_options_missing_value_for_option_raises_error&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HelloWorldGetOptions.py::Test_HelloWorldGetOptions::test_get_options_missing_value_for_option_raises_error&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stderr call -----------------------------\nusage: __main__.py [-h] [--who WHO]\n__main__.py: error: argument --who/-w: expected one argument\nusage: __main__.py [-h] [--who WHO]\n__main__.py: error: argument --who/-w: expected one argument\n&#34;}], &#34;project_0/src/test_HelloWorldGetOptions.py::Test_HelloWorldGetOptions::test_get_options_long_option_with_equals_sign&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HelloWorldGetOptions.py::Test_HelloWorldGetOptions::test_get_options_long_option_with_equals_sign&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HelloWorldGetOptions.py::Test_HelloWorldGetOptions::test_get_options_long_option_with_equals_sign&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;project_0/src/test_HelloWorldGreeting.py::Test_HelloWorldGreeting::test_greeting_default_output&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HelloWorldGreeting.py::Test_HelloWorldGreeting::test_greeting_default_output&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HelloWorldGreeting.py::Test_HelloWorldGreeting::test_greeting_default_output&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;project_0/src/test_HelloWorldGreeting.py::Test_HelloWorldGreeting::test_greeting_custom_name_output&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HelloWorldGreeting.py::Test_HelloWorldGreeting::test_greeting_custom_name_output&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HelloWorldGreeting.py::Test_HelloWorldGreeting::test_greeting_custom_name_output&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;project_0/src/test_HelloWorldGreeting.py::Test_HelloWorldGreeting::test_greeting_empty_string_output&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HelloWorldGreeting.py::Test_HelloWorldGreeting::test_greeting_empty_string_output&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HelloWorldGreeting.py::Test_HelloWorldGreeting::test_greeting_empty_string_output&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;project_0/src/test_HelloWorldGreeting.py::Test_HelloWorldGreeting::test_greeting_integer_input_output&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HelloWorldGreeting.py::Test_HelloWorldGreeting::test_greeting_integer_input_output&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HelloWorldGreeting.py::Test_HelloWorldGreeting::test_greeting_integer_input_output&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;project_0/src/test_HelloWorldGreeting.py::Test_HelloWorldGreeting::test_greeting_return_value_is_none&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HelloWorldGreeting.py::Test_HelloWorldGreeting::test_greeting_return_value_is_none&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HelloWorldGreeting.py::Test_HelloWorldGreeting::test_greeting_return_value_is_none&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;project_0/src/test_HelloWorldGreeting.py::Test_HelloWorldGreeting::test_greeting_default_return_value_is_none&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HelloWorldGreeting.py::Test_HelloWorldGreeting::test_greeting_default_return_value_is_none&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HelloWorldGreeting.py::Test_HelloWorldGreeting::test_greeting_default_return_value_is_none&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;project_0/src/test_HelloWorldMain.py::Test_HelloWorldMain::test_main_orchestrates_greeting_with_specific_args&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Error&#34;, &#34;testId&#34;: &#34;project_0/src/test_HelloWorldMain.py::Test_HelloWorldMain::test_main_orchestrates_greeting_with_specific_args::setup&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Error&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HelloWorldMain.py::Test_HelloWorldMain::test_main_orchestrates_greeting_with_specific_args::setup&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;file /var/tmp/Roost/RoostGPT/pythonrealworldtest/76dbb2c3-3937-414f-b6f2-19cab1ae12c7/source/Python-Real-World-Projects/project_0/src/test_HelloWorldMain.py, line 119\n      @pytest.mark.smoke\n      @pytest.mark.positive\n      @pytest.mark.regression\n      def test_main_orchestrates_greeting_with_specific_args(self, mocker):\nE       fixture &amp;#x27;mocker&amp;#x27; not found\n&amp;gt;       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, doctest_namespace, extra, extras, include_metadata_in_junit_xml, metadata, monkeypatch, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory\n&amp;gt;       use &amp;#x27;pytest --fixtures [testpath]&amp;#x27; for help on them.\n\n/var/tmp/Roost/RoostGPT/pythonrealworldtest/76dbb2c3-3937-414f-b6f2-19cab1ae12c7/source/Python-Real-World-Projects/project_0/src/test_HelloWorldMain.py:119\n&#34;}], &#34;project_0/src/test_HelloWorldMain.py::Test_HelloWorldMain::test_main_handles_different_who_argument&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Error&#34;, &#34;testId&#34;: &#34;project_0/src/test_HelloWorldMain.py::Test_HelloWorldMain::test_main_handles_different_who_argument::setup&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Error&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HelloWorldMain.py::Test_HelloWorldMain::test_main_handles_different_who_argument::setup&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;file /var/tmp/Roost/RoostGPT/pythonrealworldtest/76dbb2c3-3937-414f-b6f2-19cab1ae12c7/source/Python-Real-World-Projects/project_0/src/test_HelloWorldMain.py, line 146\n      @pytest.mark.positive\n      @pytest.mark.regression\n      def test_main_handles_different_who_argument(self, mocker):\nE       fixture &amp;#x27;mocker&amp;#x27; not found\n&amp;gt;       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, doctest_namespace, extra, extras, include_metadata_in_junit_xml, metadata, monkeypatch, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory\n&amp;gt;       use &amp;#x27;pytest --fixtures [testpath]&amp;#x27; for help on them.\n\n/var/tmp/Roost/RoostGPT/pythonrealworldtest/76dbb2c3-3937-414f-b6f2-19cab1ae12c7/source/Python-Real-World-Projects/project_0/src/test_HelloWorldMain.py:146\n&#34;}], &#34;project_0/src/test_HelloWorldMain.py::Test_HelloWorldMain::test_main_uses_sys_argv_by_default&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Error&#34;, &#34;testId&#34;: &#34;project_0/src/test_HelloWorldMain.py::Test_HelloWorldMain::test_main_uses_sys_argv_by_default::setup&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Error&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HelloWorldMain.py::Test_HelloWorldMain::test_main_uses_sys_argv_by_default::setup&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;file /var/tmp/Roost/RoostGPT/pythonrealworldtest/76dbb2c3-3937-414f-b6f2-19cab1ae12c7/source/Python-Real-World-Projects/project_0/src/test_HelloWorldMain.py, line 166\n      @pytest.mark.positive\n      @pytest.mark.regression\n      def test_main_uses_sys_argv_by_default(self, mocker):\nE       fixture &amp;#x27;mocker&amp;#x27; not found\n&amp;gt;       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, doctest_namespace, extra, extras, include_metadata_in_junit_xml, metadata, monkeypatch, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory\n&amp;gt;       use &amp;#x27;pytest --fixtures [testpath]&amp;#x27; for help on them.\n\n/var/tmp/Roost/RoostGPT/pythonrealworldtest/76dbb2c3-3937-414f-b6f2-19cab1ae12c7/source/Python-Real-World-Projects/project_0/src/test_HelloWorldMain.py:166\n&#34;}], &#34;project_0/src/test_HelloWorldMain.py::Test_HelloWorldMain::test_main_ignores_other_options_for_greeting&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Error&#34;, &#34;testId&#34;: &#34;project_0/src/test_HelloWorldMain.py::Test_HelloWorldMain::test_main_ignores_other_options_for_greeting::setup&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Error&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HelloWorldMain.py::Test_HelloWorldMain::test_main_ignores_other_options_for_greeting::setup&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;file /var/tmp/Roost/RoostGPT/pythonrealworldtest/76dbb2c3-3937-414f-b6f2-19cab1ae12c7/source/Python-Real-World-Projects/project_0/src/test_HelloWorldMain.py, line 195\n      @pytest.mark.positive\n      @pytest.mark.regression\n      def test_main_ignores_other_options_for_greeting(self, mocker):\nE       fixture &amp;#x27;mocker&amp;#x27; not found\n&amp;gt;       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, doctest_namespace, extra, extras, include_metadata_in_junit_xml, metadata, monkeypatch, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory\n&amp;gt;       use &amp;#x27;pytest --fixtures [testpath]&amp;#x27; for help on them.\n\n/var/tmp/Roost/RoostGPT/pythonrealworldtest/76dbb2c3-3937-414f-b6f2-19cab1ae12c7/source/Python-Real-World-Projects/project_0/src/test_HelloWorldMain.py:195\n&#34;}], &#34;project_0/src/test_Hw2Main.py::Test_Hw2Main::test_main_no_arguments_default_behavior&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Failed&#34;, &#34;testId&#34;: &#34;project_0/src/test_Hw2Main.py::Test_Hw2Main::test_main_no_arguments_default_behavior&#34;, &#34;duration&#34;: &#34;2 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Failed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_Hw2Main.py::Test_Hw2Main::test_main_no_arguments_default_behavior&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;2 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;self = &amp;lt;test_Hw2Main.Test_Hw2Main object at 0x7c416d6dd100&amp;gt;\nmock_exit = &amp;lt;MagicMock name=&amp;#x27;exit&amp;#x27; id=&amp;#x27;136620445224592&amp;#x27;&amp;gt;\nmock_Greeting = &amp;lt;MagicMock name=&amp;#x27;Greeting&amp;#x27; spec=&amp;#x27;Greeting&amp;#x27; id=&amp;#x27;136620445670080&amp;#x27;&amp;gt;\n\n    @pytest.mark.smoke\n    @pytest.mark.positive\n    @patch(&amp;#x27;hw2.Greeting&amp;#x27;, spec=Greeting) # Mock the Greeting class used within hw2\n    @patch(&amp;#x27;sys.exit&amp;#x27;)                   # Mock sys.exit to prevent test termination\n    def test_main_no_arguments_default_behavior(self, mock_exit, mock_Greeting):\n        &amp;quot;&amp;quot;&amp;quot;\n        Scenario 1: Execution with no command-line arguments\n        Details:\n          TestName: test_main_no_arguments_default_behavior\n          Description: Verify the function&amp;#x27;s behavior when invoked without any command-line arguments,\n                       simulating running the script directly. It should likely create a &amp;quot;Greeting&amp;quot;\n                       object with default settings.\n        Execution:\n          Arrange: Mock the &amp;quot;Greeting&amp;quot; class and sys.exit. Pass an empty list as argv.\n          Act: Call main([]).\n          Assert: Assert &amp;quot;Greeting&amp;quot; was instantiated (likely with defaults). Assert sys.exit was not called\n                  or called with 0. Assert default methods on Greeting instance if applicable.\n        Validation:\n          Validates baseline functionality and default configuration.\n        &amp;quot;&amp;quot;&amp;quot;\n        # Arrange\n        test_argv = []\n        # Ensure the mock Greeting instance is available for method call checks\n        mock_greeting_instance = mock_Greeting.return_value\n    \n        # Act\n        # We expect main might raise SystemExit if argparse finds no args invalid,\n        # or it might proceed normally. We handle both.\n        try:\n            main(test_argv)\n        except SystemExit as e:\n            # If it exits, it should be a clean exit (code 0) for default behavior\n            assert e.code == 0, &amp;quot;SystemExit called with non-zero code for default args&amp;quot;\n            mock_exit.assert_called_once_with(0) # Verify mock_exit captured it\n        else:\n             # If it didn&amp;#x27;t exit, assert mock_exit wasn&amp;#x27;t called\n             mock_exit.assert_not_called()\n    \n        # Assert\n        # Check if Greeting was instantiated (assuming default __init__ takes no specific args)\n&amp;gt;       mock_Greeting.assert_called_once_with()\n\ntest_Hw2Main.py:193: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nself = &amp;lt;MagicMock name=&amp;#x27;Greeting&amp;#x27; spec=&amp;#x27;Greeting&amp;#x27; id=&amp;#x27;136620445670080&amp;#x27;&amp;gt;\nargs = (), kwargs = {}\nmsg = &amp;quot;Expected &amp;#x27;Greeting&amp;#x27; to be called once. Called 0 times.&amp;quot;\n\n    def assert_called_once_with(self, /, *args, **kwargs):\n        &amp;quot;&amp;quot;&amp;quot;assert that the mock was called exactly once and that that call was\n        with the specified arguments.&amp;quot;&amp;quot;&amp;quot;\n        if not self.call_count == 1:\n            msg = (&amp;quot;Expected &amp;#x27;%s&amp;#x27; to be called once. Called %s times.%s&amp;quot;\n                   % (self._mock_name or &amp;#x27;mock&amp;#x27;,\n                      self.call_count,\n                      self._calls_repr()))\n&amp;gt;           raise AssertionError(msg)\nE           AssertionError: Expected &amp;#x27;Greeting&amp;#x27; to be called once. Called 0 times.\n\n/usr/lib/python3.12/unittest/mock.py:960: AssertionError\n&#34;}], &#34;project_0/src/test_Hw2Main.py::Test_Hw2Main::test_main_short_help_flag_prints_usage_and_exits&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Failed&#34;, &#34;testId&#34;: &#34;project_0/src/test_Hw2Main.py::Test_Hw2Main::test_main_short_help_flag_prints_usage_and_exits&#34;, &#34;duration&#34;: &#34;2 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Failed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_Hw2Main.py::Test_Hw2Main::test_main_short_help_flag_prints_usage_and_exits&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;2 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;self = &amp;lt;test_Hw2Main.Test_Hw2Main object at 0x7c416d1e0110&amp;gt;\nmock_exit = &amp;lt;MagicMock name=&amp;#x27;exit&amp;#x27; id=&amp;#x27;136620445677328&amp;#x27;&amp;gt;\nmock_Greeting = &amp;lt;MagicMock name=&amp;#x27;Greeting&amp;#x27; spec=&amp;#x27;Greeting&amp;#x27; id=&amp;#x27;136620445678144&amp;#x27;&amp;gt;\n\n    @pytest.mark.regression\n    @pytest.mark.cli\n    @pytest.mark.positive\n    @patch(&amp;#x27;hw2.Greeting&amp;#x27;, spec=Greeting) # Mock Greeting even though it shouldn&amp;#x27;t be called\n    @patch(&amp;#x27;sys.exit&amp;#x27;)                   # Mock sys.exit\n    def test_main_short_help_flag_prints_usage_and_exits(self, mock_exit, mock_Greeting):\n        &amp;quot;&amp;quot;&amp;quot;\n        Scenario 2: Execution with help flag (-h)\n        Details:\n          TestName: test_main_short_help_flag_prints_usage_and_exits\n          Description: Verify that providing the &amp;#x27;-h&amp;#x27; flag triggers the display of a help/usage\n                       message and causes the program to exit cleanly (status 0).\n        Execution:\n          Arrange: Mock sys.exit, capture stdout/stderr, mock Greeting. Pass [&amp;#x27;-h&amp;#x27;].\n          Act: Call main([&amp;#x27;-h&amp;#x27;]).\n          Assert: Assert help message printed, sys.exit(0) called, Greeting *not* instantiated.\n        Validation:\n          Validates standard CLI help behavior (-h).\n        &amp;quot;&amp;quot;&amp;quot;\n        # Arrange\n        test_argv = [&amp;#x27;-h&amp;#x27;]\n        f_stdout = io.StringIO()\n        f_stderr = io.StringIO()\n    \n        # Act &amp;amp; Assert SystemExit\n        # Argparse typically raises SystemExit(0) for -h\n&amp;gt;       with pytest.raises(SystemExit) as excinfo, \\\n             redirect_stdout(f_stdout), \\\n             redirect_stderr(f_stderr): # Capture both streams just in case\nE            Failed: DID NOT RAISE &amp;lt;class &amp;#x27;SystemExit&amp;#x27;&amp;gt;\n\ntest_Hw2Main.py:225: Failed\n&#34;}], &#34;project_0/src/test_Hw2Main.py::Test_Hw2Main::test_main_long_help_flag_prints_usage_and_exits&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Failed&#34;, &#34;testId&#34;: &#34;project_0/src/test_Hw2Main.py::Test_Hw2Main::test_main_long_help_flag_prints_usage_and_exits&#34;, &#34;duration&#34;: &#34;2 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Failed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_Hw2Main.py::Test_Hw2Main::test_main_long_help_flag_prints_usage_and_exits&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;2 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;self = &amp;lt;test_Hw2Main.Test_Hw2Main object at 0x7c416d1e0ad0&amp;gt;\nmock_exit = &amp;lt;MagicMock name=&amp;#x27;exit&amp;#x27; id=&amp;#x27;136620444271200&amp;#x27;&amp;gt;\nmock_Greeting = &amp;lt;MagicMock name=&amp;#x27;Greeting&amp;#x27; spec=&amp;#x27;Greeting&amp;#x27; id=&amp;#x27;136620444276144&amp;#x27;&amp;gt;\n\n    @pytest.mark.regression\n    @pytest.mark.cli\n    @pytest.mark.positive\n    @patch(&amp;#x27;hw2.Greeting&amp;#x27;, spec=Greeting) # Mock Greeting\n    @patch(&amp;#x27;sys.exit&amp;#x27;)                   # Mock sys.exit\n    def test_main_long_help_flag_prints_usage_and_exits(self, mock_exit, mock_Greeting):\n        &amp;quot;&amp;quot;&amp;quot;\n        Scenario 3: Execution with help flag (--help)\n        Details:\n          TestName: test_main_long_help_flag_prints_usage_and_exits\n          Description: Verify that providing the &amp;#x27;--help&amp;#x27; flag triggers the display of a help/usage\n                       message and causes the program to exit cleanly (status 0).\n        Execution:\n          Arrange: Mock sys.exit, capture stdout/stderr, mock Greeting. Pass [&amp;#x27;--help&amp;#x27;].\n          Act: Call main([&amp;#x27;--help&amp;#x27;]).\n          Assert: Assert help message printed, sys.exit(0) called, Greeting *not* instantiated.\n        Validation:\n          Validates standard CLI help behavior (--help).\n        &amp;quot;&amp;quot;&amp;quot;\n        # Arrange\n        test_argv = [&amp;#x27;--help&amp;#x27;]\n        f_stdout = io.StringIO()\n        f_stderr = io.StringIO()\n    \n        # Act &amp;amp; Assert SystemExit\n&amp;gt;       with pytest.raises(SystemExit) as excinfo, \\\n             redirect_stdout(f_stdout), \\\n             redirect_stderr(f_stderr):\nE            Failed: DID NOT RAISE &amp;lt;class &amp;#x27;SystemExit&amp;#x27;&amp;gt;\n\ntest_Hw2Main.py:269: Failed\n&#34;}], &#34;project_0/src/test_Hw2Main.py::Test_Hw2Main::test_main_with_valid_options_creates_configured_greeting&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Failed&#34;, &#34;testId&#34;: &#34;project_0/src/test_Hw2Main.py::Test_Hw2Main::test_main_with_valid_options_creates_configured_greeting&#34;, &#34;duration&#34;: &#34;2 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Failed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_Hw2Main.py::Test_Hw2Main::test_main_with_valid_options_creates_configured_greeting&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;2 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;self = &amp;lt;test_Hw2Main.Test_Hw2Main object at 0x7c416d1e0c20&amp;gt;\nmock_exit = &amp;lt;MagicMock name=&amp;#x27;exit&amp;#x27; id=&amp;#x27;136620444277632&amp;#x27;&amp;gt;\nmock_Greeting = &amp;lt;MagicMock name=&amp;#x27;Greeting&amp;#x27; spec=&amp;#x27;Greeting&amp;#x27; id=&amp;#x27;136620444282864&amp;#x27;&amp;gt;\n\n    @pytest.mark.regression\n    @pytest.mark.positive\n    @pytest.mark.valid\n    @patch(&amp;#x27;hw2.Greeting&amp;#x27;, spec=Greeting) # Mock Greeting\n    @patch(&amp;#x27;sys.exit&amp;#x27;)                   # Mock sys.exit\n    def test_main_with_valid_options_creates_configured_greeting(self, mock_exit, mock_Greeting):\n        &amp;quot;&amp;quot;&amp;quot;\n        Scenario 4: Execution with valid specific options\n        Details:\n          TestName: test_main_with_valid_options_creates_configured_greeting\n          Description: Verify that providing valid command-line options correctly configures\n                       and creates the &amp;quot;Greeting&amp;quot; object. (Example: --name Alice).\n        Execution:\n          Arrange: Mock Greeting, mock sys.exit. Define valid args like [&amp;#x27;--name&amp;#x27;, &amp;#x27;Alice&amp;#x27;].\n          Act: Call main([&amp;#x27;--name&amp;#x27;, &amp;#x27;Alice&amp;#x27;]).\n          Assert: Assert Greeting instantiated with correct args (e.g., name=&amp;#x27;Alice&amp;#x27;).\n                  Assert sys.exit not called or called with 0. Assert method calls if applicable.\n        Validation:\n          Validates core logic: parsing options and initializing Greeting correctly.\n        &amp;quot;&amp;quot;&amp;quot;\n        # Arrange\n        user_name = &amp;quot;Alice&amp;quot; # // TODO: Change value if testing different names or options\n        test_argv = [&amp;#x27;--name&amp;#x27;, user_name]\n        mock_greeting_instance = mock_Greeting.return_value\n    \n        # Act\n        try:\n            main(test_argv)\n        except SystemExit as e:\n             pytest.fail(f&amp;quot;SystemExit raised unexpectedly with valid arguments {test_argv}: {e}&amp;quot;)\n    \n        # Assert\n        # Check Greeting was instantiated with arguments derived from options\n        # // TODO: Adjust the expected arguments based on how &amp;#x27;main&amp;#x27; passes them to Greeting\n&amp;gt;       mock_Greeting.assert_called_once_with(name=user_name)\n\ntest_Hw2Main.py:322: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nself = &amp;lt;MagicMock name=&amp;#x27;Greeting&amp;#x27; spec=&amp;#x27;Greeting&amp;#x27; id=&amp;#x27;136620444282864&amp;#x27;&amp;gt;\nargs = (), kwargs = {&amp;#x27;name&amp;#x27;: &amp;#x27;Alice&amp;#x27;}\nmsg = &amp;quot;Expected &amp;#x27;Greeting&amp;#x27; to be called once. Called 0 times.&amp;quot;\n\n    def assert_called_once_with(self, /, *args, **kwargs):\n        &amp;quot;&amp;quot;&amp;quot;assert that the mock was called exactly once and that that call was\n        with the specified arguments.&amp;quot;&amp;quot;&amp;quot;\n        if not self.call_count == 1:\n            msg = (&amp;quot;Expected &amp;#x27;%s&amp;#x27; to be called once. Called %s times.%s&amp;quot;\n                   % (self._mock_name or &amp;#x27;mock&amp;#x27;,\n                      self.call_count,\n                      self._calls_repr()))\n&amp;gt;           raise AssertionError(msg)\nE           AssertionError: Expected &amp;#x27;Greeting&amp;#x27; to be called once. Called 0 times.\n\n/usr/lib/python3.12/unittest/mock.py:960: AssertionError\n&#34;}], &#34;project_0/src/test_Hw2Main.py::Test_Hw2Main::test_main_with_unrecognized_option_prints_error_and_exits&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Failed&#34;, &#34;testId&#34;: &#34;project_0/src/test_Hw2Main.py::Test_Hw2Main::test_main_with_unrecognized_option_prints_error_and_exits&#34;, &#34;duration&#34;: &#34;2 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Failed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_Hw2Main.py::Test_Hw2Main::test_main_with_unrecognized_option_prints_error_and_exits&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;2 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;self = &amp;lt;test_Hw2Main.Test_Hw2Main object at 0x7c416d1e0d70&amp;gt;\nmock_exit = &amp;lt;MagicMock name=&amp;#x27;exit&amp;#x27; id=&amp;#x27;136620444286272&amp;#x27;&amp;gt;\nmock_Greeting = &amp;lt;MagicMock name=&amp;#x27;Greeting&amp;#x27; spec=&amp;#x27;Greeting&amp;#x27; id=&amp;#x27;136620444256832&amp;#x27;&amp;gt;\n\n    @pytest.mark.regression\n    @pytest.mark.negative\n    @pytest.mark.invalid\n    @patch(&amp;#x27;hw2.Greeting&amp;#x27;, spec=Greeting) # Mock Greeting\n    @patch(&amp;#x27;sys.exit&amp;#x27;)                   # Mock sys.exit\n    def test_main_with_unrecognized_option_prints_error_and_exits(self, mock_exit, mock_Greeting):\n        &amp;quot;&amp;quot;&amp;quot;\n        Scenario 5: Execution with unrecognized options\n        Details:\n          TestName: test_main_with_unrecognized_option_prints_error_and_exits\n          Description: Verify that providing an option not recognized by the argument parser\n                       results in an error message and a non-zero exit status.\n        Execution:\n          Arrange: Mock sys.exit, capture stderr, mock Greeting. Pass [&amp;#x27;--invalid-option&amp;#x27;].\n          Act: Call main([&amp;#x27;--invalid-option&amp;#x27;]).\n          Assert: Assert error message printed to stderr, sys.exit called with non-zero code,\n                  Greeting *not* instantiated.\n        Validation:\n          Validates robustness against invalid user input.\n        &amp;quot;&amp;quot;&amp;quot;\n        # Arrange\n        invalid_arg = &amp;#x27;--invalid-option&amp;#x27; # // TODO: Change value for different invalid options\n        test_argv = [invalid_arg]\n        f_stderr = io.StringIO()\n    \n        # Act &amp;amp; Assert SystemExit\n        # Argparse typically raises SystemExit(2) for unrecognized args\n&amp;gt;       with pytest.raises(SystemExit) as excinfo, \\\n             redirect_stderr(f_stderr): # Errors usually go to stderr\nE            Failed: DID NOT RAISE &amp;lt;class &amp;#x27;SystemExit&amp;#x27;&amp;gt;\n\ntest_Hw2Main.py:358: Failed\n&#34;}], &#34;project_0/src/test_Hw2Main.py::Test_Hw2Main::test_main_option_missing_required_value_prints_error_and_exits&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Failed&#34;, &#34;testId&#34;: &#34;project_0/src/test_Hw2Main.py::Test_Hw2Main::test_main_option_missing_required_value_prints_error_and_exits&#34;, &#34;duration&#34;: &#34;2 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Failed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_Hw2Main.py::Test_Hw2Main::test_main_option_missing_required_value_prints_error_and_exits&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;2 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;self = &amp;lt;test_Hw2Main.Test_Hw2Main object at 0x7c416d1e0ec0&amp;gt;\nmock_exit = &amp;lt;MagicMock name=&amp;#x27;exit&amp;#x27; id=&amp;#x27;136620444259760&amp;#x27;&amp;gt;\nmock_Greeting = &amp;lt;MagicMock name=&amp;#x27;Greeting&amp;#x27; spec=&amp;#x27;Greeting&amp;#x27; id=&amp;#x27;136620444264656&amp;#x27;&amp;gt;\n\n    @pytest.mark.regression\n    @pytest.mark.negative\n    @pytest.mark.invalid\n    @patch(&amp;#x27;hw2.Greeting&amp;#x27;, spec=Greeting) # Mock Greeting\n    @patch(&amp;#x27;sys.exit&amp;#x27;)                   # Mock sys.exit\n    def test_main_option_missing_required_value_prints_error_and_exits(self, mock_exit, mock_Greeting):\n        &amp;quot;&amp;quot;&amp;quot;\n        Scenario 6: Execution with an option requiring a value, but value is missing\n        Details:\n          TestName: test_main_option_missing_required_value_prints_error_and_exits\n          Description: Verify that if an option expects a value (e.g., &amp;quot;--name &amp;lt;value&amp;gt;&amp;quot;) but none\n                       is provided, an error message is shown, and the program exits with an error status.\n        Execution:\n          Arrange: Mock sys.exit, capture stderr, mock Greeting. Assume &amp;#x27;--name&amp;#x27; needs a value. Pass [&amp;#x27;--name&amp;#x27;].\n          Act: Call main([&amp;#x27;--name&amp;#x27;]).\n          Assert: Assert error message printed to stderr, sys.exit called with non-zero code,\n                  Greeting *not* instantiated.\n        Validation:\n          Validates parser handling of missing required values for options.\n        &amp;quot;&amp;quot;&amp;quot;\n        # Arrange\n        option_requiring_value = &amp;#x27;--name&amp;#x27; # // TODO: Change value if testing other options needing values\n        test_argv = [option_requiring_value]\n        f_stderr = io.StringIO()\n    \n        # Act &amp;amp; Assert SystemExit\n        # Argparse typically raises SystemExit(2) for missing values\n&amp;gt;       with pytest.raises(SystemExit) as excinfo, \\\n             redirect_stderr(f_stderr):\nE            Failed: DID NOT RAISE &amp;lt;class &amp;#x27;SystemExit&amp;#x27;&amp;gt;\n\ntest_Hw2Main.py:404: Failed\n&#34;}], &#34;project_0/src/test_HwGetOptions.py::Test_HwGetOptions::test_get_options_required_arg_only_uses_defaults&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HwGetOptions.py::Test_HwGetOptions::test_get_options_required_arg_only_uses_defaults&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HwGetOptions.py::Test_HwGetOptions::test_get_options_required_arg_only_uses_defaults&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;project_0/src/test_HwGetOptions.py::Test_HwGetOptions::test_get_options_override_defaults_long_options&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HwGetOptions.py::Test_HwGetOptions::test_get_options_override_defaults_long_options&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HwGetOptions.py::Test_HwGetOptions::test_get_options_override_defaults_long_options&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;project_0/src/test_HwGetOptions.py::Test_HwGetOptions::test_get_options_override_defaults_short_options&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HwGetOptions.py::Test_HwGetOptions::test_get_options_override_defaults_short_options&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HwGetOptions.py::Test_HwGetOptions::test_get_options_override_defaults_short_options&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;project_0/src/test_HwGetOptions.py::Test_HwGetOptions::test_get_options_missing_required_arg_exits&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HwGetOptions.py::Test_HwGetOptions::test_get_options_missing_required_arg_exits&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HwGetOptions.py::Test_HwGetOptions::test_get_options_missing_required_arg_exits&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stderr call -----------------------------\nusage: __main__.py [-h] [-o OUTPUT] [-l LEVEL] [-v] input_file\n__main__.py: error: the following arguments are required: input_file\nusage: __main__.py [-h] [-o OUTPUT] [-l LEVEL] [-v] input_file\n__main__.py: error: the following arguments are required: input_file\n&#34;}], &#34;project_0/src/test_HwGetOptions.py::Test_HwGetOptions::test_get_options_invalid_value_type_exits&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HwGetOptions.py::Test_HwGetOptions::test_get_options_invalid_value_type_exits&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HwGetOptions.py::Test_HwGetOptions::test_get_options_invalid_value_type_exits&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stderr call -----------------------------\nusage: __main__.py [-h] [-o OUTPUT] [-l LEVEL] [-v] input_file\n__main__.py: error: argument -l/--level: invalid int value: &amp;#x27;high&amp;#x27;\n&#34;}], &#34;project_0/src/test_HwGetOptions.py::Test_HwGetOptions::test_get_options_help_short_exits_normally&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HwGetOptions.py::Test_HwGetOptions::test_get_options_help_short_exits_normally&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HwGetOptions.py::Test_HwGetOptions::test_get_options_help_short_exits_normally&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\nusage: __main__.py [-h] [-o OUTPUT] [-l LEVEL] [-v] input_file\n\nProcess some files.\n\npositional arguments:\n  input_file            The required input file path.\n\noptions:\n  -h, --help            show this help message and exit\n  -o OUTPUT, --output OUTPUT\n                        Optional output file path (default: stdout).\n  -l LEVEL, --level LEVEL\n                        Optional processing level (default: 1).\n  -v, --verbose         Enable verbose output.\n&#34;}], &#34;project_0/src/test_HwGetOptions.py::Test_HwGetOptions::test_get_options_help_long_exits_normally&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HwGetOptions.py::Test_HwGetOptions::test_get_options_help_long_exits_normally&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HwGetOptions.py::Test_HwGetOptions::test_get_options_help_long_exits_normally&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\nusage: __main__.py [-h] [-o OUTPUT] [-l LEVEL] [-v] input_file\n\nProcess some files.\n\npositional arguments:\n  input_file            The required input file path.\n\noptions:\n  -h, --help            show this help message and exit\n  -o OUTPUT, --output OUTPUT\n                        Optional output file path (default: stdout).\n  -l LEVEL, --level LEVEL\n                        Optional processing level (default: 1).\n  -v, --verbose         Enable verbose output.\n&#34;}], &#34;project_0/src/test_HwGetOptions.py::Test_HwGetOptions::test_get_options_unrecognized_option_exits&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HwGetOptions.py::Test_HwGetOptions::test_get_options_unrecognized_option_exits&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HwGetOptions.py::Test_HwGetOptions::test_get_options_unrecognized_option_exits&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stderr call -----------------------------\nusage: __main__.py [-h] [-o OUTPUT] [-l LEVEL] [-v] input_file\n__main__.py: error: unrecognized arguments: --debug\n&#34;}], &#34;project_0/src/test_HwGreeting.py::Test_HwGreeting::test_greeting_default_output&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HwGreeting.py::Test_HwGreeting::test_greeting_default_output&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HwGreeting.py::Test_HwGreeting::test_greeting_default_output&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;project_0/src/test_HwGreeting.py::Test_HwGreeting::test_greeting_custom_name_output&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HwGreeting.py::Test_HwGreeting::test_greeting_custom_name_output&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HwGreeting.py::Test_HwGreeting::test_greeting_custom_name_output&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;project_0/src/test_HwGreeting.py::Test_HwGreeting::test_greeting_empty_string_output&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HwGreeting.py::Test_HwGreeting::test_greeting_empty_string_output&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HwGreeting.py::Test_HwGreeting::test_greeting_empty_string_output&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;project_0/src/test_HwGreeting.py::Test_HwGreeting::test_greeting_integer_input_output&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HwGreeting.py::Test_HwGreeting::test_greeting_integer_input_output&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HwGreeting.py::Test_HwGreeting::test_greeting_integer_input_output&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;project_0/src/test_HwGreeting.py::Test_HwGreeting::test_greeting_return_value_is_none&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HwGreeting.py::Test_HwGreeting::test_greeting_return_value_is_none&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HwGreeting.py::Test_HwGreeting::test_greeting_return_value_is_none&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\nHello, World!\nHello, Test!\n&#34;}], &#34;project_0/src/test_HwMain.py::Test_HwMain::test_main_no_args_default_greeting&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Failed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HwMain.py::Test_HwMain::test_main_no_args_default_greeting&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Failed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HwMain.py::Test_HwMain::test_main_no_args_default_greeting&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;self = &amp;lt;test_HwMain.Test_HwMain object at 0x7c416d1e3a40&amp;gt;\n\n    @pytest.mark.smoke\n    @pytest.mark.valid\n    @pytest.mark.positive\n    def test_main_no_args_default_greeting(self):\n        &amp;quot;&amp;quot;&amp;quot;\n        Verify that when &amp;quot;main&amp;quot; is called with an empty argument list\n        (simulating no command-line arguments), it produces the default\n        greeting output to standard output and returns None.\n        &amp;quot;&amp;quot;&amp;quot;\n        # Arrange\n        captured_output = io.StringIO()\n        # // TODO: Update expected_greeting if the actual default greeting changes\n        expected_greeting = &amp;quot;Hello, World!\\n&amp;quot;\n        argv = [] # Simulate no command-line arguments\n    \n        # Act\n        # Redirect stdout to capture print statements\n        with redirect_stdout(captured_output):\n            # Assuming &amp;#x27;main&amp;#x27; is imported correctly\n            result = main(argv)\n    \n        # Assert\n        # Check if the captured output matches the expected default greeting\n&amp;gt;       assert captured_output.getvalue() == expected_greeting\nE       AssertionError: assert &amp;#x27;&amp;#x27; == &amp;#x27;Hello, World!\\n&amp;#x27;\nE         \nE         - Hello, World!\n\ntest_HwMain.py:150: AssertionError\n&#34;}], &#34;project_0/src/test_HwMain.py::Test_HwMain::test_main_with_name_argument&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Failed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HwMain.py::Test_HwMain::test_main_with_name_argument&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Failed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HwMain.py::Test_HwMain::test_main_with_name_argument&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;self = &amp;lt;test_HwMain.Test_HwMain object at 0x7c416d1e3bc0&amp;gt;\n\n    @pytest.mark.regression\n    @pytest.mark.valid\n    @pytest.mark.positive\n    def test_main_with_name_argument(self):\n        &amp;quot;&amp;quot;&amp;quot;\n        Verify that providing a specific name via a command-line argument\n        (e.g., &amp;quot;--name&amp;quot;) results in a personalized greeting being printed\n        to standard output and returns None.\n        &amp;quot;&amp;quot;&amp;quot;\n        # Arrange\n        captured_output = io.StringIO()\n        test_name = &amp;quot;Alice&amp;quot;\n        # // TODO: Update expected_greeting_format if the greeting format changes\n        # Assuming the format is &amp;quot;Hello, {name}!&amp;quot;\n        expected_greeting = f&amp;quot;Hello, {test_name}!\\n&amp;quot;\n        argv = [&amp;#x27;--name&amp;#x27;, test_name] # Simulate &amp;#x27;--name Alice&amp;#x27;\n    \n        # Act\n        with redirect_stdout(captured_output):\n            result = main(argv)\n    \n        # Assert\n&amp;gt;       assert captured_output.getvalue() == expected_greeting\nE       AssertionError: assert &amp;#x27;&amp;#x27; == &amp;#x27;Hello, Alice!\\n&amp;#x27;\nE         \nE         - Hello, Alice!\n\ntest_HwMain.py:177: AssertionError\n&#34;}], &#34;project_0/src/test_HwMain.py::Test_HwMain::test_main_with_greeting_phrase_argument&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Failed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HwMain.py::Test_HwMain::test_main_with_greeting_phrase_argument&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Failed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HwMain.py::Test_HwMain::test_main_with_greeting_phrase_argument&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;self = &amp;lt;test_HwMain.Test_HwMain object at 0x7c416d1e3d40&amp;gt;\n\n    @pytest.mark.regression\n    @pytest.mark.valid\n    @pytest.mark.positive\n    def test_main_with_greeting_phrase_argument(self):\n        &amp;quot;&amp;quot;&amp;quot;\n        Verify that providing a custom greeting phrase via a command-line\n        argument (e.g., &amp;quot;--greeting&amp;quot;) changes the greeting phrase used\n        in the output, while potentially using the default name, and returns None.\n        &amp;quot;&amp;quot;&amp;quot;\n        # Arrange\n        captured_output = io.StringIO()\n        test_greeting = &amp;quot;Hi&amp;quot;\n        # // TODO: Update default_name if the actual default name changes\n        default_name = &amp;quot;World&amp;quot;\n        # Assuming the format is &amp;quot;{greeting}, {name}!&amp;quot;\n        expected_output = f&amp;quot;{test_greeting}, {default_name}!\\n&amp;quot;\n        argv = [&amp;#x27;--greeting&amp;#x27;, test_greeting] # Simulate &amp;#x27;--greeting Hi&amp;#x27;\n    \n        # Act\n        with redirect_stdout(captured_output):\n            result = main(argv)\n    \n        # Assert\n&amp;gt;       assert captured_output.getvalue() == expected_output\nE       AssertionError: assert &amp;#x27;&amp;#x27; == &amp;#x27;Hi, World!\\n&amp;#x27;\nE         \nE         - Hi, World!\n\ntest_HwMain.py:204: AssertionError\n&#34;}], &#34;project_0/src/test_HwMain.py::Test_HwMain::test_main_with_name_and_greeting_arguments[name_then_greeting]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Failed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HwMain.py::Test_HwMain::test_main_with_name_and_greeting_arguments[name_then_greeting]&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Failed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HwMain.py::Test_HwMain::test_main_with_name_and_greeting_arguments[name_then_greeting]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;self = &amp;lt;test_HwMain.Test_HwMain object at 0x7c416d1e3ec0&amp;gt;\nargv = [&amp;#x27;--name&amp;#x27;, &amp;#x27;Bob&amp;#x27;, &amp;#x27;--greeting&amp;#x27;, &amp;#x27;Yo&amp;#x27;]\n\n    @pytest.mark.regression\n    @pytest.mark.valid\n    @pytest.mark.positive\n    @pytest.mark.parametrize(&amp;quot;argv&amp;quot;, [\n        pytest.param([&amp;#x27;--name&amp;#x27;, &amp;#x27;Bob&amp;#x27;, &amp;#x27;--greeting&amp;#x27;, &amp;#x27;Yo&amp;#x27;], id=&amp;quot;name_then_greeting&amp;quot;),\n        pytest.param([&amp;#x27;--greeting&amp;#x27;, &amp;#x27;Yo&amp;#x27;, &amp;#x27;--name&amp;#x27;, &amp;#x27;Bob&amp;#x27;], id=&amp;quot;greeting_then_name&amp;quot;) # Test different order\n    ])\n    def test_main_with_name_and_greeting_arguments(self, argv):\n        &amp;quot;&amp;quot;&amp;quot;\n        Verify that providing both a custom name and a custom greeting phrase\n        via command-line arguments results in an output reflecting both\n        customizations, regardless of order, and returns None.\n        &amp;quot;&amp;quot;&amp;quot;\n        # Arrange\n        captured_output = io.StringIO()\n        test_name = &amp;quot;Bob&amp;quot;\n        test_greeting = &amp;quot;Yo&amp;quot;\n        # Assuming the format is &amp;quot;{greeting}, {name}!&amp;quot;\n        expected_output = f&amp;quot;{test_greeting}, {test_name}!\\n&amp;quot;\n        # argv is provided by parametrize\n    \n        # Act\n        with redirect_stdout(captured_output):\n            result = main(argv)\n    \n        # Assert\n&amp;gt;       assert captured_output.getvalue() == expected_output\nE       AssertionError: assert &amp;#x27;&amp;#x27; == &amp;#x27;Yo, Bob!\\n&amp;#x27;\nE         \nE         - Yo, Bob!\n\ntest_HwMain.py:234: AssertionError\n&#34;}], &#34;project_0/src/test_HwMain.py::Test_HwMain::test_main_with_name_and_greeting_arguments[greeting_then_name]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Failed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HwMain.py::Test_HwMain::test_main_with_name_and_greeting_arguments[greeting_then_name]&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Failed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HwMain.py::Test_HwMain::test_main_with_name_and_greeting_arguments[greeting_then_name]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;self = &amp;lt;test_HwMain.Test_HwMain object at 0x7c416d1e3fe0&amp;gt;\nargv = [&amp;#x27;--greeting&amp;#x27;, &amp;#x27;Yo&amp;#x27;, &amp;#x27;--name&amp;#x27;, &amp;#x27;Bob&amp;#x27;]\n\n    @pytest.mark.regression\n    @pytest.mark.valid\n    @pytest.mark.positive\n    @pytest.mark.parametrize(&amp;quot;argv&amp;quot;, [\n        pytest.param([&amp;#x27;--name&amp;#x27;, &amp;#x27;Bob&amp;#x27;, &amp;#x27;--greeting&amp;#x27;, &amp;#x27;Yo&amp;#x27;], id=&amp;quot;name_then_greeting&amp;quot;),\n        pytest.param([&amp;#x27;--greeting&amp;#x27;, &amp;#x27;Yo&amp;#x27;, &amp;#x27;--name&amp;#x27;, &amp;#x27;Bob&amp;#x27;], id=&amp;quot;greeting_then_name&amp;quot;) # Test different order\n    ])\n    def test_main_with_name_and_greeting_arguments(self, argv):\n        &amp;quot;&amp;quot;&amp;quot;\n        Verify that providing both a custom name and a custom greeting phrase\n        via command-line arguments results in an output reflecting both\n        customizations, regardless of order, and returns None.\n        &amp;quot;&amp;quot;&amp;quot;\n        # Arrange\n        captured_output = io.StringIO()\n        test_name = &amp;quot;Bob&amp;quot;\n        test_greeting = &amp;quot;Yo&amp;quot;\n        # Assuming the format is &amp;quot;{greeting}, {name}!&amp;quot;\n        expected_output = f&amp;quot;{test_greeting}, {test_name}!\\n&amp;quot;\n        # argv is provided by parametrize\n    \n        # Act\n        with redirect_stdout(captured_output):\n            result = main(argv)\n    \n        # Assert\n&amp;gt;       assert captured_output.getvalue() == expected_output\nE       AssertionError: assert &amp;#x27;&amp;#x27; == &amp;#x27;Yo, Bob!\\n&amp;#x27;\nE         \nE         - Yo, Bob!\n\ntest_HwMain.py:234: AssertionError\n&#34;}], &#34;project_0/src/test_HwMain.py::Test_HwMain::test_main_with_help_argument&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Failed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HwMain.py::Test_HwMain::test_main_with_help_argument&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Failed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HwMain.py::Test_HwMain::test_main_with_help_argument&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;self = &amp;lt;test_HwMain.Test_HwMain object at 0x7c416d220170&amp;gt;\n\n    @pytest.mark.smoke\n    @pytest.mark.valid\n    @pytest.mark.positive # It&amp;#x27;s a positive test for the help functionality\n    def test_main_with_help_argument(self):\n        &amp;quot;&amp;quot;&amp;quot;\n        Verify that providing the standard &amp;quot;--help&amp;quot; argument triggers the\n        display of usage information to stdout and causes the program to exit\n        cleanly (SystemExit with code 0).\n        &amp;quot;&amp;quot;&amp;quot;\n        # Arrange\n        captured_output = io.StringIO()\n        argv_help = [&amp;#x27;--help&amp;#x27;]\n        # // TODO: Update expected help patterns if argparse setup changes significantly\n        # These patterns are typical for argparse help output\n        expected_patterns_in_output = [&amp;quot;usage:&amp;quot;, &amp;quot;--name&amp;quot;, &amp;quot;--greeting&amp;quot;, &amp;quot;--help&amp;quot;]\n    \n        # Act &amp;amp; Assert\n        # Check that SystemExit is raised\n&amp;gt;       with pytest.raises(SystemExit) as excinfo:\nE       Failed: DID NOT RAISE &amp;lt;class &amp;#x27;SystemExit&amp;#x27;&amp;gt;\n\ntest_HwMain.py:256: Failed\n&#34;}], &#34;project_0/src/test_HwMain.py::Test_HwMain::test_main_with_unrecognized_argument&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Failed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HwMain.py::Test_HwMain::test_main_with_unrecognized_argument&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Failed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HwMain.py::Test_HwMain::test_main_with_unrecognized_argument&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;self = &amp;lt;test_HwMain.Test_HwMain object at 0x7c416d2202f0&amp;gt;\n\n    @pytest.mark.regression\n    @pytest.mark.invalid\n    @pytest.mark.negative\n    def test_main_with_unrecognized_argument(self):\n        &amp;quot;&amp;quot;&amp;quot;\n        Verify that providing an argument not defined in the argument parser\n        causes argparse to print an error message to standard error (stderr)\n        and exit with a non-zero status code (typically SystemExit code 2).\n        &amp;quot;&amp;quot;&amp;quot;\n        # Arrange\n        captured_error = io.StringIO()\n        unknown_arg = &amp;#x27;--unknown-option&amp;#x27;\n        argv = [unknown_arg]\n        # // TODO: Update expected error message if argparse error format differs\n        # This is the typical argparse error message format\n        expected_error_pattern = f&amp;quot;unrecognized arguments: {unknown_arg}&amp;quot;\n        expected_exit_code = 2 # Standard argparse exit code for such errors\n    \n        # Act &amp;amp; Assert\n        # Check that SystemExit is raised\n&amp;gt;       with pytest.raises(SystemExit) as excinfo:\nE       Failed: DID NOT RAISE &amp;lt;class &amp;#x27;SystemExit&amp;#x27;&amp;gt;\n\ntest_HwMain.py:292: Failed\n&#34;}], &#34;project_0/src/test_HwMain.py::Test_HwMain::test_main_with_missing_argument_value&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Failed&#34;, &#34;testId&#34;: &#34;project_0/src/test_HwMain.py::Test_HwMain::test_main_with_missing_argument_value&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Failed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;project_0/src/test_HwMain.py::Test_HwMain::test_main_with_missing_argument_value&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;self = &amp;lt;test_HwMain.Test_HwMain object at 0x7c416d220470&amp;gt;\n\n    @pytest.mark.regression\n    @pytest.mark.invalid\n    @pytest.mark.negative\n    def test_main_with_missing_argument_value(self):\n        &amp;quot;&amp;quot;&amp;quot;\n        Verify that providing an argument that requires a value (e.g., &amp;quot;--name&amp;quot;)\n        without supplying the value causes argparse to print an error to stderr\n        and exit with a non-zero status code (typically SystemExit code 2).\n        &amp;quot;&amp;quot;&amp;quot;\n        # Arrange\n        captured_error = io.StringIO()\n        arg_requiring_value = &amp;#x27;--name&amp;#x27; # Assume --name requires a value\n        argv = [arg_requiring_value] # Simulate &amp;#x27;--name&amp;#x27; without a value\n        # // TODO: Update expected error message if argparse error format differs\n        # This is the typical argparse error message format\n        expected_error_pattern = f&amp;quot;argument {arg_requiring_value}: expected one argument&amp;quot;\n        expected_exit_code = 2 # Standard argparse exit code for such errors\n    \n        # Act &amp;amp; Assert\n        # Check that SystemExit is raised\n&amp;gt;       with pytest.raises(SystemExit) as excinfo:\nE       Failed: DID NOT RAISE &amp;lt;class &amp;#x27;SystemExit&amp;#x27;&amp;gt;\n\ntest_HwMain.py:330: Failed\n&#34;}]}, &#34;renderCollapsed&#34;: [&#34;passed&#34;], &#34;initialSort&#34;: &#34;result&#34;, &#34;title&#34;: &#34;index.html&#34;}"></div>
+    <script>
+      (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+const { getCollapsedCategory, setCollapsedIds } = require('./storage.js')
+
+class DataManager {
+    setManager(data) {
+        const collapsedCategories = [...getCollapsedCategory(data.renderCollapsed)]
+        const collapsedIds = []
+        const tests = Object.values(data.tests).flat().map((test, index) => {
+            const collapsed = collapsedCategories.includes(test.result.toLowerCase())
+            const id = `test_${index}`
+            if (collapsed) {
+                collapsedIds.push(id)
+            }
+            return {
+                ...test,
+                id,
+                collapsed,
+            }
+        })
+        const dataBlob = { ...data, tests }
+        this.data = { ...dataBlob }
+        this.renderData = { ...dataBlob }
+        setCollapsedIds(collapsedIds)
+    }
+
+    get allData() {
+        return { ...this.data }
+    }
+
+    resetRender() {
+        this.renderData = { ...this.data }
+    }
+
+    setRender(data) {
+        this.renderData.tests = [...data]
+    }
+
+    toggleCollapsedItem(id) {
+        this.renderData.tests = this.renderData.tests.map((test) =>
+            test.id === id ? { ...test, collapsed: !test.collapsed } : test,
+        )
+    }
+
+    set allCollapsed(collapsed) {
+        this.renderData = { ...this.renderData, tests: [...this.renderData.tests.map((test) => (
+            { ...test, collapsed }
+        ))] }
+    }
+
+    get testSubset() {
+        return [...this.renderData.tests]
+    }
+
+    get environment() {
+        return this.renderData.environment
+    }
+
+    get initialSort() {
+        return this.data.initialSort
+    }
+}
+
+module.exports = {
+    manager: new DataManager(),
+}
+
+},{"./storage.js":8}],2:[function(require,module,exports){
+const mediaViewer = require('./mediaviewer.js')
+const templateEnvRow = document.getElementById('template_environment_row')
+const templateResult = document.getElementById('template_results-table__tbody')
+
+function htmlToElements(html) {
+    const temp = document.createElement('template')
+    temp.innerHTML = html
+    return temp.content.childNodes
+}
+
+const find = (selector, elem) => {
+    if (!elem) {
+        elem = document
+    }
+    return elem.querySelector(selector)
+}
+
+const findAll = (selector, elem) => {
+    if (!elem) {
+        elem = document
+    }
+    return [...elem.querySelectorAll(selector)]
+}
+
+const dom = {
+    getStaticRow: (key, value) => {
+        const envRow = templateEnvRow.content.cloneNode(true)
+        const isObj = typeof value === 'object' && value !== null
+        const values = isObj ? Object.keys(value).map((k) => `${k}: ${value[k]}`) : null
+
+        const valuesElement = htmlToElements(
+            values ? `<ul>${values.map((val) => `<li>${val}</li>`).join('')}<ul>` : `<div>${value}</div>`)[0]
+        const td = findAll('td', envRow)
+        td[0].textContent = key
+        td[1].appendChild(valuesElement)
+
+        return envRow
+    },
+    getResultTBody: ({ testId, id, log, extras, resultsTableRow, tableHtml, result, collapsed }) => {
+        const resultBody = templateResult.content.cloneNode(true)
+        resultBody.querySelector('tbody').classList.add(result.toLowerCase())
+        resultBody.querySelector('tbody').id = testId
+        resultBody.querySelector('.collapsible').dataset.id = id
+
+        resultsTableRow.forEach((html) => {
+            const t = document.createElement('template')
+            t.innerHTML = html
+            resultBody.querySelector('.collapsible').appendChild(t.content)
+        })
+
+        if (log) {
+            // Wrap lines starting with "E" with span.error to color those lines red
+            const wrappedLog = log.replace(/^E.*$/gm, (match) => `<span class="error">${match}</span>`)
+            resultBody.querySelector('.log').innerHTML = wrappedLog
+        } else {
+            resultBody.querySelector('.log').remove()
+        }
+
+        if (collapsed) {
+            resultBody.querySelector('.collapsible > td')?.classList.add('collapsed')
+            resultBody.querySelector('.extras-row').classList.add('hidden')
+        } else {
+            resultBody.querySelector('.collapsible > td')?.classList.remove('collapsed')
+        }
+
+        const media = []
+        extras?.forEach(({ name, format_type, content }) => {
+            if (['image', 'video'].includes(format_type)) {
+                media.push({ path: content, name, format_type })
+            }
+
+            if (format_type === 'html') {
+                resultBody.querySelector('.extraHTML').insertAdjacentHTML('beforeend', `<div>${content}</div>`)
+            }
+        })
+        mediaViewer.setup(resultBody, media)
+
+        // Add custom html from the pytest_html_results_table_html hook
+        tableHtml?.forEach((item) => {
+            resultBody.querySelector('td[class="extra"]').insertAdjacentHTML('beforeend', item)
+        })
+
+        return resultBody
+    },
+}
+
+module.exports = {
+    dom,
+    htmlToElements,
+    find,
+    findAll,
+}
+
+},{"./mediaviewer.js":6}],3:[function(require,module,exports){
+const { manager } = require('./datamanager.js')
+const { doSort } = require('./sort.js')
+const storageModule = require('./storage.js')
+
+const getFilteredSubSet = (filter) =>
+    manager.allData.tests.filter(({ result }) => filter.includes(result.toLowerCase()))
+
+const doInitFilter = () => {
+    const currentFilter = storageModule.getVisible()
+    const filteredSubset = getFilteredSubSet(currentFilter)
+    manager.setRender(filteredSubset)
+}
+
+const doFilter = (type, show) => {
+    if (show) {
+        storageModule.showCategory(type)
+    } else {
+        storageModule.hideCategory(type)
+    }
+
+    const currentFilter = storageModule.getVisible()
+    const filteredSubset = getFilteredSubSet(currentFilter)
+    manager.setRender(filteredSubset)
+
+    const sortColumn = storageModule.getSort()
+    doSort(sortColumn, true)
+}
+
+module.exports = {
+    doFilter,
+    doInitFilter,
+}
+
+},{"./datamanager.js":1,"./sort.js":7,"./storage.js":8}],4:[function(require,module,exports){
+const { redraw, bindEvents, renderStatic } = require('./main.js')
+const { doInitFilter } = require('./filter.js')
+const { doInitSort } = require('./sort.js')
+const { manager } = require('./datamanager.js')
+const data = JSON.parse(document.getElementById('data-container').dataset.jsonblob)
+
+function init() {
+    manager.setManager(data)
+    doInitFilter()
+    doInitSort()
+    renderStatic()
+    redraw()
+    bindEvents()
+}
+
+init()
+
+},{"./datamanager.js":1,"./filter.js":3,"./main.js":5,"./sort.js":7}],5:[function(require,module,exports){
+const { dom, find, findAll } = require('./dom.js')
+const { manager } = require('./datamanager.js')
+const { doSort } = require('./sort.js')
+const { doFilter } = require('./filter.js')
+const {
+    getVisible,
+    getCollapsedIds,
+    setCollapsedIds,
+    getSort,
+    getSortDirection,
+    possibleFilters,
+} = require('./storage.js')
+
+const removeChildren = (node) => {
+    while (node.firstChild) {
+        node.removeChild(node.firstChild)
+    }
+}
+
+const renderStatic = () => {
+    const renderEnvironmentTable = () => {
+        const environment = manager.environment
+        const rows = Object.keys(environment).map((key) => dom.getStaticRow(key, environment[key]))
+        const table = document.getElementById('environment')
+        removeChildren(table)
+        rows.forEach((row) => table.appendChild(row))
+    }
+    renderEnvironmentTable()
+}
+
+const addItemToggleListener = (elem) => {
+    elem.addEventListener('click', ({ target }) => {
+        const id = target.parentElement.dataset.id
+        manager.toggleCollapsedItem(id)
+
+        const collapsedIds = getCollapsedIds()
+        if (collapsedIds.includes(id)) {
+            const updated = collapsedIds.filter((item) => item !== id)
+            setCollapsedIds(updated)
+        } else {
+            collapsedIds.push(id)
+            setCollapsedIds(collapsedIds)
+        }
+        redraw()
+    })
+}
+
+const renderContent = (tests) => {
+    const sortAttr = getSort(manager.initialSort)
+    const sortAsc = JSON.parse(getSortDirection())
+    const rows = tests.map(dom.getResultTBody)
+    const table = document.getElementById('results-table')
+    const tableHeader = document.getElementById('results-table-head')
+
+    const newTable = document.createElement('table')
+    newTable.id = 'results-table'
+
+    // remove all sorting classes and set the relevant
+    findAll('.sortable', tableHeader).forEach((elem) => elem.classList.remove('asc', 'desc'))
+    tableHeader.querySelector(`.sortable[data-column-type="${sortAttr}"]`)?.classList.add(sortAsc ? 'desc' : 'asc')
+    newTable.appendChild(tableHeader)
+
+    if (!rows.length) {
+        const emptyTable = document.getElementById('template_results-table__body--empty').content.cloneNode(true)
+        newTable.appendChild(emptyTable)
+    } else {
+        rows.forEach((row) => {
+            if (!!row) {
+                findAll('.collapsible td:not(.col-links', row).forEach(addItemToggleListener)
+                find('.logexpander', row).addEventListener('click',
+                    (evt) => evt.target.parentNode.classList.toggle('expanded'),
+                )
+                newTable.appendChild(row)
+            }
+        })
+    }
+
+    table.replaceWith(newTable)
+}
+
+const renderDerived = () => {
+    const currentFilter = getVisible()
+    possibleFilters.forEach((result) => {
+        const input = document.querySelector(`input[data-test-result="${result}"]`)
+        input.checked = currentFilter.includes(result)
+    })
+}
+
+const bindEvents = () => {
+    const filterColumn = (evt) => {
+        const { target: element } = evt
+        const { testResult } = element.dataset
+
+        doFilter(testResult, element.checked)
+        const collapsedIds = getCollapsedIds()
+        const updated = manager.renderData.tests.map((test) => {
+            return {
+                ...test,
+                collapsed: collapsedIds.includes(test.id),
+            }
+        })
+        manager.setRender(updated)
+        redraw()
+    }
+
+    const header = document.getElementById('environment-header')
+    header.addEventListener('click', () => {
+        const table = document.getElementById('environment')
+        table.classList.toggle('hidden')
+        header.classList.toggle('collapsed')
+    })
+
+    findAll('input[name="filter_checkbox"]').forEach((elem) => {
+        elem.addEventListener('click', filterColumn)
+    })
+
+    findAll('.sortable').forEach((elem) => {
+        elem.addEventListener('click', (evt) => {
+            const { target: element } = evt
+            const { columnType } = element.dataset
+            doSort(columnType)
+            redraw()
+        })
+    })
+
+    document.getElementById('show_all_details').addEventListener('click', () => {
+        manager.allCollapsed = false
+        setCollapsedIds([])
+        redraw()
+    })
+    document.getElementById('hide_all_details').addEventListener('click', () => {
+        manager.allCollapsed = true
+        const allIds = manager.renderData.tests.map((test) => test.id)
+        setCollapsedIds(allIds)
+        redraw()
+    })
+}
+
+const redraw = () => {
+    const { testSubset } = manager
+
+    renderContent(testSubset)
+    renderDerived()
+}
+
+module.exports = {
+    redraw,
+    bindEvents,
+    renderStatic,
+}
+
+},{"./datamanager.js":1,"./dom.js":2,"./filter.js":3,"./sort.js":7,"./storage.js":8}],6:[function(require,module,exports){
+class MediaViewer {
+    constructor(assets) {
+        this.assets = assets
+        this.index = 0
+    }
+
+    nextActive() {
+        this.index = this.index === this.assets.length - 1 ? 0 : this.index + 1
+        return [this.activeFile, this.index]
+    }
+
+    prevActive() {
+        this.index = this.index === 0 ? this.assets.length - 1 : this.index -1
+        return [this.activeFile, this.index]
+    }
+
+    get currentIndex() {
+        return this.index
+    }
+
+    get activeFile() {
+        return this.assets[this.index]
+    }
+}
+
+
+const setup = (resultBody, assets) => {
+    if (!assets.length) {
+        resultBody.querySelector('.media').classList.add('hidden')
+        return
+    }
+
+    const mediaViewer = new MediaViewer(assets)
+    const container = resultBody.querySelector('.media-container')
+    const leftArrow = resultBody.querySelector('.media-container__nav--left')
+    const rightArrow = resultBody.querySelector('.media-container__nav--right')
+    const mediaName = resultBody.querySelector('.media__name')
+    const counter = resultBody.querySelector('.media__counter')
+    const imageEl = resultBody.querySelector('img')
+    const sourceEl = resultBody.querySelector('source')
+    const videoEl = resultBody.querySelector('video')
+
+    const setImg = (media, index) => {
+        if (media?.format_type === 'image') {
+            imageEl.src = media.path
+
+            imageEl.classList.remove('hidden')
+            videoEl.classList.add('hidden')
+        } else if (media?.format_type === 'video') {
+            sourceEl.src = media.path
+
+            videoEl.classList.remove('hidden')
+            imageEl.classList.add('hidden')
+        }
+
+        mediaName.innerText = media?.name
+        counter.innerText = `${index + 1} / ${assets.length}`
+    }
+    setImg(mediaViewer.activeFile, mediaViewer.currentIndex)
+
+    const moveLeft = () => {
+        const [media, index] = mediaViewer.prevActive()
+        setImg(media, index)
+    }
+    const doRight = () => {
+        const [media, index] = mediaViewer.nextActive()
+        setImg(media, index)
+    }
+    const openImg = () => {
+        window.open(mediaViewer.activeFile.path, '_blank')
+    }
+    if (assets.length === 1) {
+        container.classList.add('media-container--fullscreen')
+    } else {
+        leftArrow.addEventListener('click', moveLeft)
+        rightArrow.addEventListener('click', doRight)
+    }
+    imageEl.addEventListener('click', openImg)
+}
+
+module.exports = {
+    setup,
+}
+
+},{}],7:[function(require,module,exports){
+const { manager } = require('./datamanager.js')
+const storageModule = require('./storage.js')
+
+const genericSort = (list, key, ascending, customOrder) => {
+    let sorted
+    if (customOrder) {
+        sorted = list.sort((a, b) => {
+            const aValue = a.result.toLowerCase()
+            const bValue = b.result.toLowerCase()
+
+            const aIndex = customOrder.findIndex((item) => item.toLowerCase() === aValue)
+            const bIndex = customOrder.findIndex((item) => item.toLowerCase() === bValue)
+
+            // Compare the indices to determine the sort order
+            return aIndex - bIndex
+        })
+    } else {
+        sorted = list.sort((a, b) => a[key] === b[key] ? 0 : a[key] > b[key] ? 1 : -1)
+    }
+
+    if (ascending) {
+        sorted.reverse()
+    }
+    return sorted
+}
+
+const durationSort = (list, ascending) => {
+    const parseDuration = (duration) => {
+        if (duration.includes(':')) {
+            // If it's in the format "HH:mm:ss"
+            const [hours, minutes, seconds] = duration.split(':').map(Number)
+            return (hours * 3600 + minutes * 60 + seconds) * 1000
+        } else {
+            // If it's in the format "nnn ms"
+            return parseInt(duration)
+        }
+    }
+    const sorted = list.sort((a, b) => parseDuration(a['duration']) - parseDuration(b['duration']))
+    if (ascending) {
+        sorted.reverse()
+    }
+    return sorted
+}
+
+const doInitSort = () => {
+    const type = storageModule.getSort(manager.initialSort)
+    const ascending = storageModule.getSortDirection()
+    const list = manager.testSubset
+    const initialOrder = ['Error', 'Failed', 'Rerun', 'XFailed', 'XPassed', 'Skipped', 'Passed']
+
+    storageModule.setSort(type)
+    storageModule.setSortDirection(ascending)
+
+    if (type?.toLowerCase() === 'original') {
+        manager.setRender(list)
+    } else {
+        let sortedList
+        switch (type) {
+        case 'duration':
+            sortedList = durationSort(list, ascending)
+            break
+        case 'result':
+            sortedList = genericSort(list, type, ascending, initialOrder)
+            break
+        default:
+            sortedList = genericSort(list, type, ascending)
+            break
+        }
+        manager.setRender(sortedList)
+    }
+}
+
+const doSort = (type, skipDirection) => {
+    const newSortType = storageModule.getSort(manager.initialSort) !== type
+    const currentAsc = storageModule.getSortDirection()
+    let ascending
+    if (skipDirection) {
+        ascending = currentAsc
+    } else {
+        ascending = newSortType ? false : !currentAsc
+    }
+    storageModule.setSort(type)
+    storageModule.setSortDirection(ascending)
+
+    const list = manager.testSubset
+    const sortedList = type === 'duration' ? durationSort(list, ascending) : genericSort(list, type, ascending)
+    manager.setRender(sortedList)
+}
+
+module.exports = {
+    doInitSort,
+    doSort,
+}
+
+},{"./datamanager.js":1,"./storage.js":8}],8:[function(require,module,exports){
+const possibleFilters = [
+    'passed',
+    'skipped',
+    'failed',
+    'error',
+    'xfailed',
+    'xpassed',
+    'rerun',
+]
+
+const getVisible = () => {
+    const url = new URL(window.location.href)
+    const settings = new URLSearchParams(url.search).get('visible')
+    const lower = (item) => {
+        const lowerItem = item.toLowerCase()
+        if (possibleFilters.includes(lowerItem)) {
+            return lowerItem
+        }
+        return null
+    }
+    return settings === null ?
+        possibleFilters :
+        [...new Set(settings?.split(',').map(lower).filter((item) => item))]
+}
+
+const hideCategory = (categoryToHide) => {
+    const url = new URL(window.location.href)
+    const visibleParams = new URLSearchParams(url.search).get('visible')
+    const currentVisible = visibleParams ? visibleParams.split(',') : [...possibleFilters]
+    const settings = [...new Set(currentVisible)].filter((f) => f !== categoryToHide).join(',')
+
+    url.searchParams.set('visible', settings)
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const showCategory = (categoryToShow) => {
+    if (typeof window === 'undefined') {
+        return
+    }
+    const url = new URL(window.location.href)
+    const currentVisible = new URLSearchParams(url.search).get('visible')?.split(',').filter(Boolean) ||
+        [...possibleFilters]
+    const settings = [...new Set([categoryToShow, ...currentVisible])]
+    const noFilter = possibleFilters.length === settings.length || !settings.length
+
+    noFilter ? url.searchParams.delete('visible') : url.searchParams.set('visible', settings.join(','))
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const getSort = (initialSort) => {
+    const url = new URL(window.location.href)
+    let sort = new URLSearchParams(url.search).get('sort')
+    if (!sort) {
+        sort = initialSort || 'result'
+    }
+    return sort
+}
+
+const setSort = (type) => {
+    const url = new URL(window.location.href)
+    url.searchParams.set('sort', type)
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const getCollapsedCategory = (renderCollapsed) => {
+    let categories
+    if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href)
+        const collapsedItems = new URLSearchParams(url.search).get('collapsed')
+        switch (true) {
+        case !renderCollapsed && collapsedItems === null:
+            categories = ['passed']
+            break
+        case collapsedItems?.length === 0 || /^["']{2}$/.test(collapsedItems):
+            categories = []
+            break
+        case /^all$/.test(collapsedItems) || collapsedItems === null && /^all$/.test(renderCollapsed):
+            categories = [...possibleFilters]
+            break
+        default:
+            categories = collapsedItems?.split(',').map((item) => item.toLowerCase()) || renderCollapsed
+            break
+        }
+    } else {
+        categories = []
+    }
+    return categories
+}
+
+const getSortDirection = () => JSON.parse(sessionStorage.getItem('sortAsc')) || false
+const setSortDirection = (ascending) => sessionStorage.setItem('sortAsc', ascending)
+
+const getCollapsedIds = () => JSON.parse(sessionStorage.getItem('collapsedIds')) || []
+const setCollapsedIds = (list) => sessionStorage.setItem('collapsedIds', JSON.stringify(list))
+
+module.exports = {
+    getVisible,
+    hideCategory,
+    showCategory,
+    getCollapsedIds,
+    setCollapsedIds,
+    getSort,
+    setSort,
+    getSortDirection,
+    setSortDirection,
+    getCollapsedCategory,
+    possibleFilters,
+}
+
+},{}]},{},[4]);
+    </script>
+  </footer>
+</html>

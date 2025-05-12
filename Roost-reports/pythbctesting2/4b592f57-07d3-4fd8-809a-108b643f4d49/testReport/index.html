@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>index.html</title>
+    <link href="assets/style.css" rel="stylesheet" type="text/css"/></head>
+  <body onLoad="init()">
+    <script>/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+
+function toArray(iter) {
+    if (iter === null) {
+        return null;
+    }
+    return Array.prototype.slice.call(iter);
+}
+
+function find(selector, elem) { // eslint-disable-line no-redeclare
+    if (!elem) {
+        elem = document;
+    }
+    return elem.querySelector(selector);
+}
+
+function findAll(selector, elem) {
+    if (!elem) {
+        elem = document;
+    }
+    return toArray(elem.querySelectorAll(selector));
+}
+
+function sortColumn(elem) {
+    toggleSortStates(elem);
+    const colIndex = toArray(elem.parentNode.childNodes).indexOf(elem);
+    let key;
+    if (elem.classList.contains('result')) {
+        key = keyResult;
+    } else if (elem.classList.contains('links')) {
+        key = keyLink;
+    } else {
+        key = keyAlpha;
+    }
+    sortTable(elem, key(colIndex));
+}
+
+function showAllExtras() { // eslint-disable-line no-unused-vars
+    findAll('.col-result').forEach(showExtras);
+}
+
+function hideAllExtras() { // eslint-disable-line no-unused-vars
+    findAll('.col-result').forEach(hideExtras);
+}
+
+function showExtras(colresultElem) {
+    const extras = colresultElem.parentNode.nextElementSibling;
+    const expandcollapse = colresultElem.firstElementChild;
+    extras.classList.remove('collapsed');
+    expandcollapse.classList.remove('expander');
+    expandcollapse.classList.add('collapser');
+}
+
+function hideExtras(colresultElem) {
+    const extras = colresultElem.parentNode.nextElementSibling;
+    const expandcollapse = colresultElem.firstElementChild;
+    extras.classList.add('collapsed');
+    expandcollapse.classList.remove('collapser');
+    expandcollapse.classList.add('expander');
+}
+
+function showFilters() {
+    let visibleString = getQueryParameter('visible') || 'all';
+    visibleString = visibleString.toLowerCase();
+    const checkedItems = visibleString.split(',');
+
+    const filterItems = document.getElementsByClassName('filter');
+    for (let i = 0; i < filterItems.length; i++) {
+        filterItems[i].hidden = false;
+
+        if (visibleString != 'all') {
+            filterItems[i].checked = checkedItems.includes(filterItems[i].getAttribute('data-test-result'));
+            filterTable(filterItems[i]);
+        }
+    }
+}
+
+function addCollapse() {
+    // Add links for show/hide all
+    const resulttable = find('table#results-table');
+    const showhideall = document.createElement('p');
+    showhideall.innerHTML = '<a href="javascript:showAllExtras()">Show all details</a> / ' +
+                            '<a href="javascript:hideAllExtras()">Hide all details</a>';
+    resulttable.parentElement.insertBefore(showhideall, resulttable);
+
+    // Add show/hide link to each result
+    findAll('.col-result').forEach(function(elem) {
+        const collapsed = getQueryParameter('collapsed') || 'Passed';
+        const extras = elem.parentNode.nextElementSibling;
+        const expandcollapse = document.createElement('span');
+        if (extras.classList.contains('collapsed')) {
+            expandcollapse.classList.add('expander');
+        } else if (collapsed.includes(elem.innerHTML)) {
+            extras.classList.add('collapsed');
+            expandcollapse.classList.add('expander');
+        } else {
+            expandcollapse.classList.add('collapser');
+        }
+        elem.appendChild(expandcollapse);
+
+        elem.addEventListener('click', function(event) {
+            if (event.currentTarget.parentNode.nextElementSibling.classList.contains('collapsed')) {
+                showExtras(event.currentTarget);
+            } else {
+                hideExtras(event.currentTarget);
+            }
+        });
+    });
+}
+
+function getQueryParameter(name) {
+    const match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}
+
+function init () { // eslint-disable-line no-unused-vars
+    resetSortHeaders();
+
+    addCollapse();
+
+    showFilters();
+
+    sortColumn(find('.initial-sort'));
+
+    findAll('.sortable').forEach(function(elem) {
+        elem.addEventListener('click',
+            function() {
+                sortColumn(elem);
+            }, false);
+    });
+}
+
+function sortTable(clicked, keyFunc) {
+    const rows = findAll('.results-table-row');
+    const reversed = !clicked.classList.contains('asc');
+    const sortedRows = sort(rows, keyFunc, reversed);
+    /* Whole table is removed here because browsers acts much slower
+     * when appending existing elements.
+     */
+    const thead = document.getElementById('results-table-head');
+    document.getElementById('results-table').remove();
+    const parent = document.createElement('table');
+    parent.id = 'results-table';
+    parent.appendChild(thead);
+    sortedRows.forEach(function(elem) {
+        parent.appendChild(elem);
+    });
+    document.getElementsByTagName('BODY')[0].appendChild(parent);
+}
+
+function sort(items, keyFunc, reversed) {
+    const sortArray = items.map(function(item, i) {
+        return [keyFunc(item), i];
+    });
+
+    sortArray.sort(function(a, b) {
+        const keyA = a[0];
+        const keyB = b[0];
+
+        if (keyA == keyB) return 0;
+
+        if (reversed) {
+            return keyA < keyB ? 1 : -1;
+        } else {
+            return keyA > keyB ? 1 : -1;
+        }
+    });
+
+    return sortArray.map(function(item) {
+        const index = item[1];
+        return items[index];
+    });
+}
+
+function keyAlpha(colIndex) {
+    return function(elem) {
+        return elem.childNodes[1].childNodes[colIndex].firstChild.data.toLowerCase();
+    };
+}
+
+function keyLink(colIndex) {
+    return function(elem) {
+        const dataCell = elem.childNodes[1].childNodes[colIndex].firstChild;
+        return dataCell == null ? '' : dataCell.innerText.toLowerCase();
+    };
+}
+
+function keyResult(colIndex) {
+    return function(elem) {
+        const strings = ['Error', 'Failed', 'Rerun', 'XFailed', 'XPassed',
+            'Skipped', 'Passed'];
+        return strings.indexOf(elem.childNodes[1].childNodes[colIndex].firstChild.data);
+    };
+}
+
+function resetSortHeaders() {
+    findAll('.sort-icon').forEach(function(elem) {
+        elem.parentNode.removeChild(elem);
+    });
+    findAll('.sortable').forEach(function(elem) {
+        const icon = document.createElement('div');
+        icon.className = 'sort-icon';
+        icon.textContent = 'vvv';
+        elem.insertBefore(icon, elem.firstChild);
+        elem.classList.remove('desc', 'active');
+        elem.classList.add('asc', 'inactive');
+    });
+}
+
+function toggleSortStates(elem) {
+    //if active, toggle between asc and desc
+    if (elem.classList.contains('active')) {
+        elem.classList.toggle('asc');
+        elem.classList.toggle('desc');
+    }
+
+    //if inactive, reset all other functions and add ascending active
+    if (elem.classList.contains('inactive')) {
+        resetSortHeaders();
+        elem.classList.remove('inactive');
+        elem.classList.add('active');
+    }
+}
+
+function isAllRowsHidden(value) {
+    return value.hidden == false;
+}
+
+function filterTable(elem) { // eslint-disable-line no-unused-vars
+    const outcomeAtt = 'data-test-result';
+    const outcome = elem.getAttribute(outcomeAtt);
+    const classOutcome = outcome + ' results-table-row';
+    const outcomeRows = document.getElementsByClassName(classOutcome);
+
+    for(let i = 0; i < outcomeRows.length; i++){
+        outcomeRows[i].hidden = !elem.checked;
+    }
+
+    const rows = findAll('.results-table-row').filter(isAllRowsHidden);
+    const allRowsHidden = rows.length == 0 ? true : false;
+    const notFoundMessage = document.getElementById('not-found-message');
+    notFoundMessage.hidden = !allRowsHidden;
+}
+</script>
+    <h1>index.html</h1>
+    <p>Report generated on 12-May-2025 at 08:51:56 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a> v3.2.0</p>
+    <h2>Environment</h2>
+    <table id="environment">
+      <tr>
+        <td>Packages</td>
+        <td>{"pluggy": "1.0.0", "py": "1.11.0", "pytest": "7.0.1"}</td></tr>
+      <tr>
+        <td>Platform</td>
+        <td>Linux-6.8.0-1025-azure-x86_64-with</td></tr>
+      <tr>
+        <td>Plugins</td>
+        <td>{"html": "3.2.0", "metadata": "1.11.0"}</td></tr>
+      <tr>
+        <td>Python</td>
+        <td>3.6.9</td></tr></table>
+    <h2>Summary</h2>
+    <p>28 tests ran in 1.24 seconds. </p>
+    <p class="filter" hidden="true">(Un)check the boxes to filter the results.</p><input checked="true" class="filter" data-test-result="passed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="passed">4 passed</span>, <input checked="true" class="filter" data-test-result="skipped" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="skipped">0 skipped</span>, <input checked="true" class="filter" data-test-result="failed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="failed">24 failed</span>, <input checked="true" class="filter" data-test-result="error" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="error">66 errors</span>, <input checked="true" class="filter" data-test-result="xfailed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xfailed">0 expected failures</span>, <input checked="true" class="filter" data-test-result="xpassed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xpassed">0 unexpected passes</span>
+    <h2>Results</h2>
+    <table id="results-table">
+      <thead id="results-table-head">
+        <tr>
+          <th class="sortable result initial-sort" col="result">Result</th>
+          <th class="sortable" col="name">Test</th>
+          <th class="sortable" col="duration">Duration</th>
+          <th class="sortable links" col="links">Links</th></tr>
+        <tr hidden="true" id="not-found-message">
+          <th colspan="4">No results found. Try to check the filters</th></tr></thead>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_0/src/test_HelloWorldGetOptions.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_0/src/test_HelloWorldGetOptions.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_0/src/test_HelloWorldGetOptions.py:57: in &lt;module&gt;<br/>    from .hello_world import get_options<br/><span class="error">E   ImportError: attempted relative import with no known parent package</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_0/src/test_HelloWorldGreeting.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">project_0/src/test_HelloWorldGreeting.py:45: in &lt;module&gt;<br/>    from hello_world import greeting<br/>project_0/src/hello_world.py:10: in &lt;module&gt;<br/>    def get_options(argv: list[str]) -&gt; argparse.Namespace:<br/><span class="error">E   TypeError: &#x27;type&#x27; object is not subscriptable</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_0/src/test_HelloWorldMain.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">project_0/src/test_HelloWorldMain.py:59: in &lt;module&gt;<br/>    from hello_world import main<br/>project_0/src/hello_world.py:10: in &lt;module&gt;<br/>    def get_options(argv: list[str]) -&gt; argparse.Namespace:<br/><span class="error">E   TypeError: &#x27;type&#x27; object is not subscriptable</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_0/src/test_Hw2Main.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">project_0/src/test_Hw2Main.py:56: in &lt;module&gt;<br/>    from hw2 import main<br/>project_0/src/hw2.py:21: in &lt;module&gt;<br/>    def main(argv: list[str] = sys.argv[1:]) -&gt; None:<br/><span class="error">E   TypeError: &#x27;type&#x27; object is not subscriptable</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_0/src/test_HwGetOptions.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">project_0/src/test_HwGetOptions.py:60: in &lt;module&gt;<br/>    from hw import get_options<br/>project_0/src/hw.py:14: in &lt;module&gt;<br/>    def get_options(argv: list[str] = sys.argv[1:]) -&gt; argparse.Namespace:<br/><span class="error">E   TypeError: &#x27;type&#x27; object is not subscriptable</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_0/src/test_HwGreeting.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">project_0/src/test_HwGreeting.py:45: in &lt;module&gt;<br/>    from hw import greeting<br/>project_0/src/hw.py:14: in &lt;module&gt;<br/>    def get_options(argv: list[str] = sys.argv[1:]) -&gt; argparse.Namespace:<br/><span class="error">E   TypeError: &#x27;type&#x27; object is not subscriptable</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_0/src/test_HwMain.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">project_0/src/test_HwMain.py:71: in &lt;module&gt;<br/>    from hw import main<br/>project_0/src/hw.py:14: in &lt;module&gt;<br/>    def get_options(argv: list[str] = sys.argv[1:]) -&gt; argparse.Namespace:<br/><span class="error">E   TypeError: &#x27;type&#x27; object is not subscriptable</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_0/tests/test_hello_world.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">project_0/tests/test_hello_world.py:5: in &lt;module&gt;<br/>    import hello_world<br/>project_0/src/hello_world.py:10: in &lt;module&gt;<br/>    def get_options(argv: list[str]) -&gt; argparse.Namespace:<br/><span class="error">E   TypeError: &#x27;type&#x27; object is not subscriptable</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_0/tests/test_hw.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">project_0/tests/test_hw.py:7: in &lt;module&gt;<br/>    import hw<br/>project_0/src/hw.py:14: in &lt;module&gt;<br/>    def get_options(argv: list[str] = sys.argv[1:]) -&gt; argparse.Namespace:<br/><span class="error">E   TypeError: &#x27;type&#x27; object is not subscriptable</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_0/tests/test_hw2.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">project_0/tests/test_hw2.py:7: in &lt;module&gt;<br/>    import hw2<br/>project_0/src/hw2.py:21: in &lt;module&gt;<br/>    def main(argv: list[str] = sys.argv[1:]) -&gt; None:<br/><span class="error">E   TypeError: &#x27;type&#x27; object is not subscriptable</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_0/tests/steps/test_HwCliStepImpl.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">project_0/tests/steps/test_HwCliStepImpl.py:53: in &lt;module&gt;<br/>    from hw_cli import step_impl<br/>project_0/tests/steps/hw_cli.py:9: in &lt;module&gt;<br/>    @when(u&#x27;we run command &quot;{command}&quot;&#x27;)<br/><span class="error">E   NameError: name &#x27;when&#x27; is not defined</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_1/src/test_AcquireGetOptions.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_1/src/test_AcquireGetOptions.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_1/src/test_AcquireGetOptions.py:72: in &lt;module&gt;<br/>    from acquire import get_options<br/>project_1_1/src/acquire.py:6: in &lt;module&gt;<br/>    from dataclasses import asdict<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;dataclasses&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_1/src/test_CsvExtractTestSeries1Pair.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_1/src/test_CsvExtractTestSeries1Pair.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_1/src/test_CsvExtractTestSeries1Pair.py:58: in &lt;module&gt;<br/>    from csv_extract import Series1Pair<br/>project_1_1/src/csv_extract.py:5: in &lt;module&gt;<br/>    from model import RawData, XYPair<br/>project_1_1/src/model.py:5: in &lt;module&gt;<br/>    from dataclasses import dataclass<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;dataclasses&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_1/src/test_ExtractBuildPairs.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_1/src/test_ExtractBuildPairs.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_1/src/test_ExtractBuildPairs.py:48: in &lt;module&gt;<br/>    from model import RawData<br/>project_1_1/src/model.py:5: in &lt;module&gt;<br/>    from dataclasses import dataclass<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;dataclasses&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_1/src/test_PairBuilderFromRow.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">/app/venv/lib/python3.6/site-packages/_pytest/python.py:599: in _importtestmodule<br/>    mod = import_path(self.path, mode=importmode, root=self.config.rootpath)<br/>/app/venv/lib/python3.6/site-packages/_pytest/pathlib.py:533: in import_path<br/>    importlib.import_module(module_name)<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>&lt;frozen importlib._bootstrap&gt;:994: in _gcd_import<br/>    ???<br/>&lt;frozen importlib._bootstrap&gt;:971: in _find_and_load<br/>    ???<br/>&lt;frozen importlib._bootstrap&gt;:955: in _find_and_load_unlocked<br/>    ???<br/>&lt;frozen importlib._bootstrap&gt;:665: in _load_unlocked<br/>    ???<br/>/app/venv/lib/python3.6/site-packages/_pytest/assertion/rewrite.py:162: in exec_module<br/>    source_stat, co = _rewrite_test(fn, self.config)<br/>/app/venv/lib/python3.6/site-packages/_pytest/assertion/rewrite.py:364: in _rewrite_test<br/>    tree = ast.parse(source, filename=strfn)<br/>/usr/lib/python3.6/ast.py:35: in parse<br/>    return compile(source, filename, mode, PyCF_ONLY_AST)<br/><span class="error">E     File &quot;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_1/src/test_PairBuilderFromRow.py&quot;, line 59</span><br/><span class="error">E       class Test_PairBuilderFromRow:</span><br/><span class="error">E       ^</span><br/><span class="error">E   IndentationError: unexpected indent</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_1/src/test_Series1PairFromRow.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_1/src/test_Series1PairFromRow.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_1/src/test_Series1PairFromRow.py:45: in &lt;module&gt;<br/>    from csv_extract import Series1Pair<br/>project_1_1/src/csv_extract.py:5: in &lt;module&gt;<br/>    from model import RawData, XYPair<br/>project_1_1/src/model.py:5: in &lt;module&gt;<br/>    from dataclasses import dataclass<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;dataclasses&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_1/src/test_Series2PairFromRow.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_1/src/test_Series2PairFromRow.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_1/src/test_Series2PairFromRow.py:49: in &lt;module&gt;<br/>    from csv_extract import Series2Pair<br/>project_1_1/src/csv_extract.py:5: in &lt;module&gt;<br/>    from model import RawData, XYPair<br/>project_1_1/src/model.py:5: in &lt;module&gt;<br/>    from dataclasses import dataclass<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;dataclasses&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_1/src/test_Series3PairFromRow.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_1/src/test_Series3PairFromRow.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_1/src/test_Series3PairFromRow.py:56: in &lt;module&gt;<br/>    from csv_extract import Series3Pair<br/>project_1_1/src/csv_extract.py:5: in &lt;module&gt;<br/>    from model import RawData, XYPair<br/>project_1_1/src/model.py:5: in &lt;module&gt;<br/>    from dataclasses import dataclass<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;dataclasses&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_1/src/test_Series4PairFromRow.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_1/src/test_Series4PairFromRow.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_1/src/test_Series4PairFromRow.py:60: in &lt;module&gt;<br/>    from .csv_extract import Series4Pair<br/><span class="error">E   ImportError: attempted relative import with no known parent package</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_1/tests/test_model.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_1/tests/test_model.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_1/tests/test_model.py:7: in &lt;module&gt;<br/>    from dataclasses import asdict<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;dataclasses&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_1/tests/steps/test_FakeCliStepsStepImpl.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">project_1_1/tests/steps/test_FakeCliStepsStepImpl.py:50: in &lt;module&gt;<br/>    from fake_cli_steps import step_impl<br/>project_1_1/tests/steps/fake_cli_steps.py:9: in &lt;module&gt;<br/>    @given(u&#x27;the &quot;Anscombe_quartet_data.csv&quot; source file exists&#x27;)<br/><span class="error">E   NameError: name &#x27;given&#x27; is not defined</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/src/test_AcquireGetOptions.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/src/test_AcquireGetOptions.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_2/src/test_AcquireGetOptions.py:59: in &lt;module&gt;<br/>    from acquire import get_options<br/>project_1_2/src/acquire.py:13: in &lt;module&gt;<br/>    from model import *<br/>project_1_2/src/model.py:5: in &lt;module&gt;<br/>    from dataclasses import dataclass<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;dataclasses&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/src/test_AcquireMain.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">import file mismatch:<br/>imported module &#x27;test_AcquireMain&#x27; has this __file__ attribute:<br/>  /var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_1/src/test_AcquireMain.py<br/>which is not the same as the test file we want to collect:<br/>  /var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/src/test_AcquireMain.py<br/>HINT: remove __pycache__ / .pyc files and/or use a unique basename for your test file modules<br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/src/test_DsBuilderFromJson.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/src/test_DsBuilderFromJson.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_2/src/test_DsBuilderFromJson.py:62: in &lt;module&gt;<br/>    from kaggle_client import DSBuilder  # Assuming &#x27;DSBuilder&#x27; exists and can be imported without ImportError<br/>project_1_2/src/kaggle_client.py:7: in &lt;module&gt;<br/>    from dataclasses import dataclass<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;dataclasses&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/src/test_KaggleClientFindJson.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/src/test_KaggleClientFindJson.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_2/src/test_KaggleClientFindJson.py:61: in &lt;module&gt;<br/>    from kaggle_client import find_json<br/>project_1_2/src/kaggle_client.py:7: in &lt;module&gt;<br/>    from dataclasses import dataclass<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;dataclasses&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/src/test_KaggleClientMain.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/src/test_KaggleClientMain.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_2/src/test_KaggleClientMain.py:74: in &lt;module&gt;<br/>    from kaggle_client import main<br/>project_1_2/src/kaggle_client.py:7: in &lt;module&gt;<br/>    from dataclasses import dataclass<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;dataclasses&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/src/test_PairBuilderFromRow.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/src/test_PairBuilderFromRow.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_2/src/test_PairBuilderFromRow.py:57: in &lt;module&gt;<br/>    from model import RawData<br/>project_1_2/src/model.py:5: in &lt;module&gt;<br/>    from dataclasses import dataclass<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;dataclasses&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/src/test_RestAccessClose.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/src/test_RestAccessClose.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_2/src/test_RestAccessClose.py:58: in &lt;module&gt;<br/>    from kaggle_client import RestAccess<br/>project_1_2/src/kaggle_client.py:7: in &lt;module&gt;<br/>    from dataclasses import dataclass<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;dataclasses&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/src/test_RestAccessErrorDump.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/src/test_RestAccessErrorDump.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_2/src/test_RestAccessErrorDump.py:59: in &lt;module&gt;<br/>    from kaggle_client import RestAccess<br/>project_1_2/src/kaggle_client.py:7: in &lt;module&gt;<br/>    from dataclasses import dataclass<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;dataclasses&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/src/test_RestAccessGetHtml.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/src/test_RestAccessGetHtml.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_2/src/test_RestAccessGetHtml.py:61: in &lt;module&gt;<br/>    from kaggle_client import RestAccess<br/>project_1_2/src/kaggle_client.py:7: in &lt;module&gt;<br/>    from dataclasses import dataclass<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;dataclasses&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/src/test_RestAccessGetJson.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">project_1_2/src/test_RestAccessGetJson.py:64: in &lt;module&gt;<br/>    class RestAccess:<br/>project_1_2/src/test_RestAccessGetJson.py:69: in RestAccess<br/>    def get_json(self, url: str, params: Dict[str, str] | None = None) -&gt; Dict[str, Any]:<br/><span class="error">E   TypeError: unsupported operand type(s) for |: &#x27;GenericMeta&#x27; and &#x27;NoneType&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/src/test_RestAccessGetPagedJson.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/src/test_RestAccessGetPagedJson.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_2/src/test_RestAccessGetPagedJson.py:70: in &lt;module&gt;<br/>    from kaggle_client import RestAccess<br/>project_1_2/src/kaggle_client.py:7: in &lt;module&gt;<br/>    from dataclasses import dataclass<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;dataclasses&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/src/test_RestAccessGetZip.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/src/test_RestAccessGetZip.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_2/src/test_RestAccessGetZip.py:50: in &lt;module&gt;<br/>    from kaggle_client import RestAccess<br/>project_1_2/src/kaggle_client.py:7: in &lt;module&gt;<br/>    from dataclasses import dataclass<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;dataclasses&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/src/test_RestAccessInit.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/src/test_RestAccessInit.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_2/src/test_RestAccessInit.py:57: in &lt;module&gt;<br/>    from kaggle_client import RestAccess<br/>project_1_2/src/kaggle_client.py:7: in &lt;module&gt;<br/>    from dataclasses import dataclass<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;dataclasses&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/src/test_RestExtractBuildPairs.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/src/test_RestExtractBuildPairs.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_2/src/test_RestExtractBuildPairs.py:57: in &lt;module&gt;<br/>    from kaggle_client import RestExtract<br/>project_1_2/src/kaggle_client.py:7: in &lt;module&gt;<br/>    from dataclasses import dataclass<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;dataclasses&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/src/test_RestExtractInit.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/src/test_RestExtractInit.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_2/src/test_RestExtractInit.py:60: in &lt;module&gt;<br/>    from kaggle_client import RestExtract<br/>project_1_2/src/kaggle_client.py:7: in &lt;module&gt;<br/>    from dataclasses import dataclass<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;dataclasses&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/src/test_WebpageClientExtractRows.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/src/test_WebpageClientExtractRows.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_2/src/test_WebpageClientExtractRows.py:54: in &lt;module&gt;<br/>    from bs4 import BeautifulSoup, Tag<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;bs4&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/src/test_WebpageClientFindTableCaption.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/src/test_WebpageClientFindTableCaption.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_2/src/test_WebpageClientFindTableCaption.py:46: in &lt;module&gt;<br/>    from bs4 import BeautifulSoup, Tag<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;bs4&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/src/test_WebpageClientFromWikipedia.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/src/test_WebpageClientFromWikipedia.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_2/src/test_WebpageClientFromWikipedia.py:59: in &lt;module&gt;<br/>    from bs4 import BeautifulSoup, Tag<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;bs4&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/src/test_WebpageClientGetPage.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/src/test_WebpageClientGetPage.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_2/src/test_WebpageClientGetPage.py:57: in &lt;module&gt;<br/>    from webpage_client import get_page<br/>project_1_2/src/webpage_client.py:8: in &lt;module&gt;<br/>    from bs4 import BeautifulSoup, Tag<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;bs4&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/tests/test_EnvironmentBeforeScenario.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/tests/test_EnvironmentBeforeScenario.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_2/tests/test_EnvironmentBeforeScenario.py:49: in &lt;module&gt;<br/>    from .environment import before_scenario<br/><span class="error">E   ImportError: attempted relative import with no known parent package</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/tests/test_EnvironmentBeforeTag.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/tests/test_EnvironmentBeforeTag.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_2/tests/test_EnvironmentBeforeTag.py:45: in &lt;module&gt;<br/>    from environment import before_tag, kaggle_server, Context<br/>project_1_2/tests/environment.py:11: in &lt;module&gt;<br/>    from behave import fixture, use_fixture<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;behave&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/tests/test_EnvironmentKaggleServer.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/tests/test_EnvironmentKaggleServer.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_2/tests/test_EnvironmentKaggleServer.py:61: in &lt;module&gt;<br/>    from behave.runner import Context<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;behave&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/tests/test_MockKaggleBottleDatasetsDownload.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/tests/test_MockKaggleBottleDatasetsDownload.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_2/tests/test_MockKaggleBottleDatasetsDownload.py:48: in &lt;module&gt;<br/>    from bottle import HTTPResponse<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;bottle&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/tests/test_MockKaggleBottleDatasetsList.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/tests/test_MockKaggleBottleDatasetsList.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_2/tests/test_MockKaggleBottleDatasetsList.py:48: in &lt;module&gt;<br/>    from mock_kaggle_bottle import datasets_list<br/>project_1_2/tests/mock_kaggle_bottle.py:33: in &lt;module&gt;<br/>    from bottle import route, run, request, HTTPResponse<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;bottle&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/tests/test_kaggle_client.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/tests/test_kaggle_client.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_2/tests/test_kaggle_client.py:5: in &lt;module&gt;<br/>    from kaggle_client import RestAccess<br/>project_1_2/src/kaggle_client.py:7: in &lt;module&gt;<br/>    from dataclasses import dataclass<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;dataclasses&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_2/tests/steps/test_CliInterfaceStepImpl.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_2/tests/steps/test_CliInterfaceStepImpl.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_2/tests/steps/test_CliInterfaceStepImpl.py:49: in &lt;module&gt;<br/>    from cli_interface import step_impl<br/>project_1_2/tests/steps/cli_interface.py:5: in &lt;module&gt;<br/>    from behave import *<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;behave&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_3/src/test_AcquireDumpTable.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_3/src/test_AcquireDumpTable.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_3/src/test_AcquireDumpTable.py:63: in &lt;module&gt;<br/>    from bs4 import BeautifulSoup, Tag<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;bs4&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_3/src/test_AcquireGetOptions.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_3/src/test_AcquireGetOptions.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_3/src/test_AcquireGetOptions.py:58: in &lt;module&gt;<br/>    from acquire import get_options<br/>project_1_3/src/acquire.py:10: in &lt;module&gt;<br/>    import html_extract<br/>project_1_3/src/html_extract.py:6: in &lt;module&gt;<br/>    from bs4 import BeautifulSoup, Tag<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;bs4&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_3/src/test_AcquireMain.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">import file mismatch:<br/>imported module &#x27;test_AcquireMain&#x27; has this __file__ attribute:<br/>  /var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_1/src/test_AcquireMain.py<br/>which is not the same as the test file we want to collect:<br/>  /var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_3/src/test_AcquireMain.py<br/>HINT: remove __pycache__ / .pyc files and/or use a unique basename for your test file modules<br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_3/src/test_HtmlExtractDumpTable.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_3/src/test_HtmlExtractDumpTable.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_3/src/test_HtmlExtractDumpTable.py:58: in &lt;module&gt;<br/>    from bs4 import BeautifulSoup, Tag<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;bs4&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_3/src/test_HtmlExtractFindTableCaption.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_3/src/test_HtmlExtractFindTableCaption.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_3/src/test_HtmlExtractFindTableCaption.py:58: in &lt;module&gt;<br/>    from bs4 import BeautifulSoup, Tag<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;bs4&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_3/src/test_HtmlExtractGetPage.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_3/src/test_HtmlExtractGetPage.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_3/src/test_HtmlExtractGetPage.py:71: in &lt;module&gt;<br/>    from bs4 import BeautifulSoup, Tag<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;bs4&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_3/src/test_HtmlExtractTableRowDataIter.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_3/src/test_HtmlExtractTableRowDataIter.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_3/src/test_HtmlExtractTableRowDataIter.py:70: in &lt;module&gt;<br/>    from bs4 import BeautifulSoup<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;bs4&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_3/tests/test_html_extract.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_3/tests/test_html_extract.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_3/tests/test_html_extract.py:6: in &lt;module&gt;<br/>    import html_extract<br/>project_1_3/src/html_extract.py:6: in &lt;module&gt;<br/>    from bs4 import BeautifulSoup, Tag<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;bs4&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_3/tests/steps/test_CliInterfaceStepImpl.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_3/tests/steps/test_CliInterfaceStepImpl.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_3/tests/steps/test_CliInterfaceStepImpl.py:55: in &lt;module&gt;<br/>    from cli_interface import step_impl   # Correct the import statement<br/>project_1_3/tests/steps/cli_interface.py:5: in &lt;module&gt;<br/>    from behave import given, when, then<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;behave&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_4/src/test_BuildDbMain.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_4/src/test_BuildDbMain.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_4/src/test_BuildDbMain.py:61: in &lt;module&gt;<br/>    import toml  # Corrected library name<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;toml&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_4/tests/test_build_db.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">/app/venv/lib/python3.6/site-packages/_pytest/python.py:599: in _importtestmodule<br/>    mod = import_path(self.path, mode=importmode, root=self.config.rootpath)<br/>/app/venv/lib/python3.6/site-packages/_pytest/pathlib.py:533: in import_path<br/>    importlib.import_module(module_name)<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>&lt;frozen importlib._bootstrap&gt;:994: in _gcd_import<br/>    ???<br/>&lt;frozen importlib._bootstrap&gt;:971: in _find_and_load<br/>    ???<br/>&lt;frozen importlib._bootstrap&gt;:955: in _find_and_load_unlocked<br/>    ???<br/>&lt;frozen importlib._bootstrap&gt;:665: in _load_unlocked<br/>    ???<br/>/app/venv/lib/python3.6/site-packages/_pytest/assertion/rewrite.py:171: in exec_module<br/>    exec(co, module.__dict__)<br/>project_1_4/tests/test_build_db.py:7: in &lt;module&gt;<br/>    import build_db<br/><span class="error">E     File &quot;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_4/src/build_db.py&quot;, line 19</span><br/><span class="error">E       match statements:</span><br/><span class="error">E                      ^</span><br/><span class="error">E   SyntaxError: invalid syntax</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_5/src/test_AcquireGetOptions.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_5/src/test_AcquireGetOptions.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>project_1_5/src/acquire.py:9: in &lt;module&gt;<br/>    import tomllib  # type: ignore[import]<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;tomllib&#x27;</span><br/><br/>During handling of the above exception, another exception occurred:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_5/src/test_AcquireGetOptions.py:60: in &lt;module&gt;<br/>    from acquire import get_options<br/>project_1_5/src/acquire.py:12: in &lt;module&gt;<br/>    import toml as tomllib  # type: ignore[import]<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;toml&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_5/src/test_AcquireMain.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">import file mismatch:<br/>imported module &#x27;test_AcquireMain&#x27; has this __file__ attribute:<br/>  /var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_1/src/test_AcquireMain.py<br/>which is not the same as the test file we want to collect:<br/>  /var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_5/src/test_AcquireMain.py<br/>HINT: remove __pycache__ / .pyc files and/or use a unique basename for your test file modules<br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_5/src/test_ExtractBuildSamples.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_5/src/test_ExtractBuildSamples.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_5/src/test_ExtractBuildSamples.py:49: in &lt;module&gt;<br/>    from model import SeriesSample    # Correct the path if required<br/>project_1_5/src/model.py:5: in &lt;module&gt;<br/>    from dataclasses import dataclass<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;dataclasses&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_5/src/test_ExtractSeriesIter.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_5/src/test_ExtractSeriesIter.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_5/src/test_ExtractSeriesIter.py:50: in &lt;module&gt;<br/>    from project_1_5.src.db_extract import Extract<br/>project_1_5/src/db_extract.py:5: in &lt;module&gt;<br/>    import model<br/>project_1_5/src/model.py:5: in &lt;module&gt;<br/>    from dataclasses import dataclass<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;dataclasses&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_5/tests/test_EnvironmentBeforeTag.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_5/tests/test_EnvironmentBeforeTag.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_5/tests/test_EnvironmentBeforeTag.py:59: in &lt;module&gt;<br/>    from behave import fixture, use_fixture<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;behave&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_5/tests/test_EnvironmentSqliteDatabase.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_5/tests/test_EnvironmentSqliteDatabase.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_5/tests/test_EnvironmentSqliteDatabase.py:62: in &lt;module&gt;<br/>    from sqlite_database import sqlite_database<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;sqlite_database&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_5/tests/test_db_extract.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_5/tests/test_db_extract.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_5/tests/test_db_extract.py:9: in &lt;module&gt;<br/>    import db_extract<br/>project_1_5/src/db_extract.py:5: in &lt;module&gt;<br/>    import model<br/>project_1_5/src/model.py:5: in &lt;module&gt;<br/>    from dataclasses import dataclass<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;dataclasses&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="error results-table-row">
+        <tr>
+          <td class="col-result">Error</td>
+          <td class="col-name">project_1_5/tests/steps/test_DbInterfaceStepImpl.py::collect</td>
+          <td class="col-duration"></td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ImportError while importing test module &#x27;/var/tmp/Roost/RoostGPT/pythbctesting2/4b592f57-07d3-4fd8-809a-108b643f4d49/source/Python-Real-World-Projects/project_1_5/tests/steps/test_DbInterfaceStepImpl.py&#x27;.<br/>Hint: make sure your test modules/packages have valid Python names.<br/>Traceback:<br/>/usr/lib/python3.6/importlib/__init__.py:126: in import_module<br/>    return _bootstrap._gcd_import(name[level:], package, level)<br/>project_1_5/tests/steps/test_DbInterfaceStepImpl.py:58: in &lt;module&gt;<br/>    from db_interface import step_impl<br/>project_1_5/tests/steps/db_interface.py:5: in &lt;module&gt;<br/>    from behave import given, when, then<br/><span class="error">E   ModuleNotFoundError: No module named &#x27;behave&#x27;</span><br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">project_1_1/src/test_AcquireMain.py::Test_AcquireMain::test_main_valid_inputs</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_AcquireMain.Test_AcquireMain object at 0x78061e6c4b00&gt;<br/>tmp_path = PosixPath(&#x27;/tmp/pytest-of-root/pytest-2/test_main_valid_inputs0&#x27;)<br/><br/>    @pytest.mark.positive<br/>    def test_main_valid_inputs(self, tmp_path):<br/>        series1_file = tmp_path / &quot;Series_1.csv&quot;<br/>        series1_file.write_text(&quot;A,B,C\n1,2,3&quot;)<br/>&gt;       main([str(series1_file), str(tmp_path)])<br/><span class="error">E       NameError: name &#x27;main&#x27; is not defined</span><br/><br/>project_1_1/src/test_AcquireMain.py:86: NameError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">project_1_1/src/test_AcquireMain.py::Test_AcquireMain::test_main_no_source_files</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_AcquireMain.Test_AcquireMain object at 0x78061e6c4cf8&gt;<br/>tmp_path = PosixPath(&#x27;/tmp/pytest-of-root/pytest-2/test_main_no_source_files0&#x27;)<br/><br/>    @pytest.mark.negative<br/>    def test_main_no_source_files(self, tmp_path):<br/>&gt;       main([str(tmp_path)])<br/><span class="error">E       NameError: name &#x27;main&#x27; is not defined</span><br/><br/>project_1_1/src/test_AcquireMain.py:92: NameError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">project_1_1/src/test_AcquireMain.py::Test_AcquireMain::test_main_no_output_dir</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_AcquireMain.Test_AcquireMain object at 0x78061e6c4da0&gt;<br/><br/>    @pytest.mark.positive<br/>    def test_main_no_output_dir(self):<br/>        temp_folder = Path(&quot;/tmp/non_existent_folder&quot;)<br/>        with pytest.raises(FileNotFoundError):<br/>&gt;           main([&quot;/dummy/path&quot;, &quot;/tmp/non_existent_folder&quot;])<br/><span class="error">E           NameError: name &#x27;main&#x27; is not defined</span><br/><br/>project_1_1/src/test_AcquireMain.py:100: NameError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">project_1_1/src/test_AcquireMain.py::Test_AcquireMain::test_main_invalid_csv</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_AcquireMain.Test_AcquireMain object at 0x78061e6c4f28&gt;<br/>tmp_path = PosixPath(&#x27;/tmp/pytest-of-root/pytest-2/test_main_invalid_csv0&#x27;)<br/><br/>    @pytest.mark.negative<br/>    def test_main_invalid_csv(self, tmp_path):<br/>        series1_file = tmp_path / &quot;Series_1.csv&quot;<br/>        series1_file.write_text(&quot;A,B\n1,2,3&quot;)<br/>        with pytest.raises(csv.Error):<br/>&gt;           main([str(series1_file), str(tmp_path)])<br/><span class="error">E           NameError: name &#x27;main&#x27; is not defined</span><br/><br/>project_1_1/src/test_AcquireMain.py:109: NameError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">project_1_1/src/test_ExtractInit.py::Test_ExtractInit::test_builders_parameter_is_mutable</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_ExtractInit.Test_ExtractInit object at 0x78061e6dea58&gt;<br/><br/>    @pytest.mark.regression<br/>    def test_builders_parameter_is_mutable(self):<br/>        mock_builder_list = [Mock(), Mock(), Mock()]<br/>        extract_obj = Extract(mock_builder_list)<br/>        new_builder = Mock()<br/>        extract_obj.builders.append(new_builder)<br/>&gt;       assert extract_obj.builders == mock_builder_list + [new_builder]<br/><span class="error">E       AssertionError: assert [&lt;Mock id=&#x27;13...67665535184&#x27;&gt;] == [&lt;Mock id=&#x27;13...67665535184&#x27;&gt;]</span><br/><span class="error">E         Right contains one more item: &lt;Mock id=&#x27;131967665535184&#x27;&gt;</span><br/><span class="error">E         Use -v to get the full diff</span><br/><br/>project_1_1/src/test_ExtractInit.py:93: AssertionError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">project_1_1/src/test_ExtractInit.py::Test_ExtractInit::test_builders_parameter_not_none</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_ExtractInit.Test_ExtractInit object at 0x78061e66d240&gt;<br/><br/>    @pytest.mark.negative<br/>    def test_builders_parameter_not_none(self):<br/>        with pytest.raises(TypeError):<br/>&gt;           extract_obj = Extract(None)<br/><span class="error">E           Failed: DID NOT RAISE &lt;class &#x27;TypeError&#x27;&gt;</span><br/><br/>project_1_1/src/test_ExtractInit.py:98: Failed<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">project_1_2/tests/test_EnvironmentAfterScenario.py::Test_EnvironmentAfterScenario::test_context_type[string-scenario1]</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_EnvironmentAfterScenario.Test_EnvironmentAfterScenario object at 0x78061e174668&gt;<br/>context = &#x27;string&#x27;, scenario = &lt;MagicMock id=&#x27;131967669245208&#x27;&gt;<br/><br/>    @pytest.mark.parametrize(&quot;context, scenario&quot;, [(FakeContext(), MagicMock()), (&quot;string&quot;, MagicMock()), (123, MagicMock())])<br/>    def test_context_type(self, context, scenario):<br/>        with pytest.raises(AttributeError):<br/>&gt;           after_scenario(context, scenario)<br/><span class="error">E           Failed: DID NOT RAISE &lt;class &#x27;AttributeError&#x27;&gt;</span><br/><br/>project_1_2/tests/test_EnvironmentAfterScenario.py:75: Failed<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">project_1_2/tests/test_EnvironmentAfterScenario.py::Test_EnvironmentAfterScenario::test_context_type[123-scenario2]</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_EnvironmentAfterScenario.Test_EnvironmentAfterScenario object at 0x78061e174710&gt;<br/>context = 123, scenario = &lt;MagicMock id=&#x27;131967669420216&#x27;&gt;<br/><br/>    @pytest.mark.parametrize(&quot;context, scenario&quot;, [(FakeContext(), MagicMock()), (&quot;string&quot;, MagicMock()), (123, MagicMock())])<br/>    def test_context_type(self, context, scenario):<br/>        with pytest.raises(AttributeError):<br/>&gt;           after_scenario(context, scenario)<br/><span class="error">E           Failed: DID NOT RAISE &lt;class &#x27;AttributeError&#x27;&gt;</span><br/><br/>project_1_2/tests/test_EnvironmentAfterScenario.py:75: Failed<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">project_1_2/tests/test_EnvironmentAfterScenario.py::Test_EnvironmentAfterScenario::test_scenario_type[context0-None]</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_EnvironmentAfterScenario.Test_EnvironmentAfterScenario object at 0x78061e174198&gt;<br/>context = &lt;test_EnvironmentAfterScenario.FakeContext object at 0x78061e174240&gt;<br/>scenario = None<br/><br/>    @pytest.mark.parametrize(&quot;context, scenario&quot;, [(FakeContext(), None), (FakeContext(), &quot;string&quot;), (FakeContext(), 123)])<br/>    def test_scenario_type(self, context, scenario):<br/>        try:<br/>&gt;           after_scenario(context, scenario)<br/><br/>project_1_2/tests/test_EnvironmentAfterScenario.py:80: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br/><br/>context = &lt;test_EnvironmentAfterScenario.FakeContext object at 0x78061e174240&gt;<br/>scenario = None<br/><br/>    def after_scenario(context, scenario):<br/>        if hasattr(context, &quot;temp_path&quot;):<br/>&gt;           context.temp_path.unlink()<br/><span class="error">E           AttributeError: &#x27;NoneType&#x27; object has no attribute &#x27;unlink&#x27;</span><br/><br/>project_1_2/tests/test_EnvironmentAfterScenario.py:103: AttributeError<br/><br/>During handling of the above exception, another exception occurred:<br/><br/>self = &lt;test_EnvironmentAfterScenario.Test_EnvironmentAfterScenario object at 0x78061e174198&gt;<br/>context = &lt;test_EnvironmentAfterScenario.FakeContext object at 0x78061e174240&gt;<br/>scenario = None<br/><br/>    @pytest.mark.parametrize(&quot;context, scenario&quot;, [(FakeContext(), None), (FakeContext(), &quot;string&quot;), (FakeContext(), 123)])<br/>    def test_scenario_type(self, context, scenario):<br/>        try:<br/>            after_scenario(context, scenario)<br/>        except Exception as e:<br/>&gt;           pytest.fail(f&quot;Test failed due to {str(e)}&quot;)<br/><span class="error">E           Failed: Test failed due to &#x27;NoneType&#x27; object has no attribute &#x27;unlink&#x27;</span><br/><br/>project_1_2/tests/test_EnvironmentAfterScenario.py:82: Failed<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">project_1_2/tests/test_EnvironmentAfterScenario.py::Test_EnvironmentAfterScenario::test_scenario_type[context1-string]</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_EnvironmentAfterScenario.Test_EnvironmentAfterScenario object at 0x78061e174438&gt;<br/>context = &lt;test_EnvironmentAfterScenario.FakeContext object at 0x78061e1740f0&gt;<br/>scenario = &#x27;string&#x27;<br/><br/>    @pytest.mark.parametrize(&quot;context, scenario&quot;, [(FakeContext(), None), (FakeContext(), &quot;string&quot;), (FakeContext(), 123)])<br/>    def test_scenario_type(self, context, scenario):<br/>        try:<br/>&gt;           after_scenario(context, scenario)<br/><br/>project_1_2/tests/test_EnvironmentAfterScenario.py:80: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br/><br/>context = &lt;test_EnvironmentAfterScenario.FakeContext object at 0x78061e1740f0&gt;<br/>scenario = &#x27;string&#x27;<br/><br/>    def after_scenario(context, scenario):<br/>        if hasattr(context, &quot;temp_path&quot;):<br/>&gt;           context.temp_path.unlink()<br/><span class="error">E           AttributeError: &#x27;NoneType&#x27; object has no attribute &#x27;unlink&#x27;</span><br/><br/>project_1_2/tests/test_EnvironmentAfterScenario.py:103: AttributeError<br/><br/>During handling of the above exception, another exception occurred:<br/><br/>self = &lt;test_EnvironmentAfterScenario.Test_EnvironmentAfterScenario object at 0x78061e174438&gt;<br/>context = &lt;test_EnvironmentAfterScenario.FakeContext object at 0x78061e1740f0&gt;<br/>scenario = &#x27;string&#x27;<br/><br/>    @pytest.mark.parametrize(&quot;context, scenario&quot;, [(FakeContext(), None), (FakeContext(), &quot;string&quot;), (FakeContext(), 123)])<br/>    def test_scenario_type(self, context, scenario):<br/>        try:<br/>            after_scenario(context, scenario)<br/>        except Exception as e:<br/>&gt;           pytest.fail(f&quot;Test failed due to {str(e)}&quot;)<br/><span class="error">E           Failed: Test failed due to &#x27;NoneType&#x27; object has no attribute &#x27;unlink&#x27;</span><br/><br/>project_1_2/tests/test_EnvironmentAfterScenario.py:82: Failed<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">project_1_2/tests/test_EnvironmentAfterScenario.py::Test_EnvironmentAfterScenario::test_scenario_type[context2-123]</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_EnvironmentAfterScenario.Test_EnvironmentAfterScenario object at 0x78061e174128&gt;<br/>context = &lt;test_EnvironmentAfterScenario.FakeContext object at 0x78061e174cf8&gt;<br/>scenario = 123<br/><br/>    @pytest.mark.parametrize(&quot;context, scenario&quot;, [(FakeContext(), None), (FakeContext(), &quot;string&quot;), (FakeContext(), 123)])<br/>    def test_scenario_type(self, context, scenario):<br/>        try:<br/>&gt;           after_scenario(context, scenario)<br/><br/>project_1_2/tests/test_EnvironmentAfterScenario.py:80: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br/><br/>context = &lt;test_EnvironmentAfterScenario.FakeContext object at 0x78061e174cf8&gt;<br/>scenario = 123<br/><br/>    def after_scenario(context, scenario):<br/>        if hasattr(context, &quot;temp_path&quot;):<br/>&gt;           context.temp_path.unlink()<br/><span class="error">E           AttributeError: &#x27;NoneType&#x27; object has no attribute &#x27;unlink&#x27;</span><br/><br/>project_1_2/tests/test_EnvironmentAfterScenario.py:103: AttributeError<br/><br/>During handling of the above exception, another exception occurred:<br/><br/>self = &lt;test_EnvironmentAfterScenario.Test_EnvironmentAfterScenario object at 0x78061e174128&gt;<br/>context = &lt;test_EnvironmentAfterScenario.FakeContext object at 0x78061e174cf8&gt;<br/>scenario = 123<br/><br/>    @pytest.mark.parametrize(&quot;context, scenario&quot;, [(FakeContext(), None), (FakeContext(), &quot;string&quot;), (FakeContext(), 123)])<br/>    def test_scenario_type(self, context, scenario):<br/>        try:<br/>            after_scenario(context, scenario)<br/>        except Exception as e:<br/>&gt;           pytest.fail(f&quot;Test failed due to {str(e)}&quot;)<br/><span class="error">E           Failed: Test failed due to &#x27;NoneType&#x27; object has no attribute &#x27;unlink&#x27;</span><br/><br/>project_1_2/tests/test_EnvironmentAfterScenario.py:82: Failed<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">project_1_2/tests/test_EnvironmentAfterScenario.py::Test_EnvironmentAfterScenario::test_context_without_temp_path</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_EnvironmentAfterScenario.Test_EnvironmentAfterScenario object at 0x78061e1742e8&gt;<br/><br/>    def test_context_without_temp_path(self):<br/>        context = FakeContext()<br/>    <br/>        try:<br/>&gt;           after_scenario(context, MagicMock())<br/><br/>project_1_2/tests/test_EnvironmentAfterScenario.py:97: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br/><br/>context = &lt;test_EnvironmentAfterScenario.FakeContext object at 0x78061e00bcc0&gt;<br/>scenario = &lt;MagicMock id=&#x27;131967665425264&#x27;&gt;<br/><br/>    def after_scenario(context, scenario):<br/>        if hasattr(context, &quot;temp_path&quot;):<br/>&gt;           context.temp_path.unlink()<br/><span class="error">E           AttributeError: &#x27;NoneType&#x27; object has no attribute &#x27;unlink&#x27;</span><br/><br/>project_1_2/tests/test_EnvironmentAfterScenario.py:103: AttributeError<br/><br/>During handling of the above exception, another exception occurred:<br/><br/>self = &lt;test_EnvironmentAfterScenario.Test_EnvironmentAfterScenario object at 0x78061e1742e8&gt;<br/><br/>    def test_context_without_temp_path(self):<br/>        context = FakeContext()<br/>    <br/>        try:<br/>            after_scenario(context, MagicMock())<br/>        except Exception as e:<br/>&gt;           pytest.fail(f&quot;Test failed due to {str(e)}&quot;)<br/><span class="error">E           Failed: Test failed due to &#x27;NoneType&#x27; object has no attribute &#x27;unlink&#x27;</span><br/><br/>project_1_2/tests/test_EnvironmentAfterScenario.py:99: Failed<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">project_1_2/tests/test_KaggleServerDoGet.py::Test_KaggleServerDoGet::test_do_GET_page_requests</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_KaggleServerDoGet.Test_KaggleServerDoGet object at 0x78061e56f4a8&gt;<br/><br/>    def test_do_GET_page_requests(self):<br/>        # This is a setup for a HTTP server, it&#x27;s just a placeholder.<br/>        # ToDo: Replace the setup with your proper server setup<br/>&gt;       server = HTTPServer((&#x27;127.0.0.1&#x27;, 8080), KaggleServer)<br/><span class="error">E       NameError: name &#x27;HTTPServer&#x27; is not defined</span><br/><br/>project_1_2/tests/test_KaggleServerDoGet.py:66: NameError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">project_1_2/tests/test_KaggleServerDoGet.py::Test_KaggleServerDoGet::test_do_GET_dataset_download</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_KaggleServerDoGet.Test_KaggleServerDoGet object at 0x78061e14e588&gt;<br/><br/>    def test_do_GET_dataset_download(self):<br/>        # This is a setup for a HTTP server, it&#x27;s just a placeholder.<br/>        # ToDo: Replace the setup with your proper server setup<br/>&gt;       server = HTTPServer((&#x27;127.0.0.1&#x27;, 8080), KaggleServer)<br/><span class="error">E       NameError: name &#x27;HTTPServer&#x27; is not defined</span><br/><br/>project_1_2/tests/test_KaggleServerDoGet.py:91: NameError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">project_1_2/tests/test_KaggleServerDoGet.py::Test_KaggleServerDoGet::test_do_GET_dataset_metadata</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_KaggleServerDoGet.Test_KaggleServerDoGet object at 0x78061e525da0&gt;<br/><br/>    def test_do_GET_dataset_metadata(self):<br/>        # This is a setup for a HTTP server, it&#x27;s just a placeholder.<br/>        # ToDo: Replace the setup with your proper server setup<br/>&gt;       server = HTTPServer((&#x27;127.0.0.1&#x27;, 8080), KaggleServer)<br/><span class="error">E       NameError: name &#x27;HTTPServer&#x27; is not defined</span><br/><br/>project_1_2/tests/test_KaggleServerDoGet.py:107: NameError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">project_1_2/tests/test_KaggleServerDoGet.py::Test_KaggleServerDoGet::test_do_GET_unknown_path</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_KaggleServerDoGet.Test_KaggleServerDoGet object at 0x78061e525e10&gt;<br/><br/>    def test_do_GET_unknown_path(self):<br/>        # This is a setup for a HTTP server, it&#x27;s just a placeholder.<br/>        # ToDo: Replace the setup with your proper server setup<br/>&gt;       server = HTTPServer((&#x27;127.0.0.1&#x27;, 8080), KaggleServer)<br/><span class="error">E       NameError: name &#x27;HTTPServer&#x27; is not defined</span><br/><br/>project_1_2/tests/test_KaggleServerDoGet.py:125: NameError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">project_1_4/src/test_QueryExamplesMain.py::Test_QueryExamplesMain::test_db_connection</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_QueryExamplesMain.Test_QueryExamplesMain object at 0x78061e021c50&gt;<br/><br/>    @pytest.mark.regression<br/>    def test_db_connection(self):<br/>        try:<br/>&gt;           main()<br/><br/>project_1_4/src/test_QueryExamplesMain.py:88: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br/><br/>    def main():<br/>        with sqlite3.connect(&quot;file:../example.db&quot;, uri=True) as connection:<br/>&gt;           cursor = connection.execute(count_join_query)<br/><span class="error">E           sqlite3.OperationalError: no such table: series</span><br/><br/>project_1_4/src/query_examples.py:34: OperationalError<br/><br/>During handling of the above exception, another exception occurred:<br/><br/>self = &lt;test_QueryExamplesMain.Test_QueryExamplesMain object at 0x78061e021c50&gt;<br/><br/>    @pytest.mark.regression<br/>    def test_db_connection(self):<br/>        try:<br/>            main()<br/>        except sqlite3.Error as e:<br/>&gt;           pytest.fail(f&quot;SQLite3 connection error occurred: {e}&quot;)<br/><span class="error">E           Failed: SQLite3 connection error occurred: no such table: series</span><br/><br/>project_1_4/src/test_QueryExamplesMain.py:90: Failed<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">project_1_4/src/test_QueryExamplesMain.py::Test_QueryExamplesMain::test_count_join_query</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_QueryExamplesMain.Test_QueryExamplesMain object at 0x78061e021588&gt;<br/>capsys = &lt;_pytest.capture.CaptureFixture object at 0x78061e01a518&gt;<br/><br/>    @pytest.mark.smoke<br/>    def test_count_join_query(self, capsys):<br/>        expected_output = [(&#x27;Series1&#x27;, 3), (&#x27;Series2&#x27;, 2)]<br/>&gt;       main()<br/><br/>project_1_4/src/test_QueryExamplesMain.py:95: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br/><br/>    def main():<br/>        with sqlite3.connect(&quot;file:../example.db&quot;, uri=True) as connection:<br/>&gt;           cursor = connection.execute(count_join_query)<br/><span class="error">E           sqlite3.OperationalError: no such table: series</span><br/><br/>project_1_4/src/query_examples.py:34: OperationalError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">project_1_4/src/test_QueryExamplesMain.py::Test_QueryExamplesMain::test_detail_join_query</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_QueryExamplesMain.Test_QueryExamplesMain object at 0x78061e0212e8&gt;<br/>capsys = &lt;_pytest.capture.CaptureFixture object at 0x78061dd36588&gt;<br/><br/>    @pytest.mark.regression<br/>    def test_detail_join_query(self, capsys):<br/>        expected_output = [(&#x27;Series1&#x27;, 1, 1), (&#x27;Series1&#x27;, 2, 1.1), (&#x27;Series1&#x27;, 3, 1.2), (&#x27;Series2&#x27;, 4, 1.3), (&#x27;Series2&#x27;, 5, 1.4)]<br/>&gt;       main()<br/><br/>project_1_4/src/test_QueryExamplesMain.py:103: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br/><br/>    def main():<br/>        with sqlite3.connect(&quot;file:../example.db&quot;, uri=True) as connection:<br/>&gt;           cursor = connection.execute(count_join_query)<br/><span class="error">E           sqlite3.OperationalError: no such table: series</span><br/><br/>project_1_4/src/query_examples.py:34: OperationalError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">project_1_4/src/test_QueryExamplesMain.py::Test_QueryExamplesMain::test_nested_query_execution</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_QueryExamplesMain.Test_QueryExamplesMain object at 0x78061e0215f8&gt;<br/>capsys = &lt;_pytest.capture.CaptureFixture object at 0x78061de16a20&gt;<br/><br/>    @pytest.mark.performance<br/>    def test_nested_query_execution(self, capsys):<br/>        expected_output = [(&#x27;Series1&#x27;, 1), (1, 1), (2, 1.1), (3, 1.2), (&#x27;Series2&#x27;, 2), (4, 1.3), (5, 1.4)]<br/>&gt;       main()<br/><br/>project_1_4/src/test_QueryExamplesMain.py:111: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br/><br/>    def main():<br/>        with sqlite3.connect(&quot;file:../example.db&quot;, uri=True) as connection:<br/>&gt;           cursor = connection.execute(count_join_query)<br/><span class="error">E           sqlite3.OperationalError: no such table: series</span><br/><br/>project_1_4/src/query_examples.py:34: OperationalError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">project_1_4/src/test_SqlScriptMakerWriteInsert.py::Test_SqlScriptMakerWriteInsert::test_insert_statement_with_valid_data</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_SqlScriptMakerWriteInsert.Test_SqlScriptMakerWriteInsert object at 0x78061e0b4470&gt;<br/><br/>    def test_insert_statement_with_valid_data(self):<br/>        series = 1<br/>        sequence = 2<br/>        x = &#x27;A&#x27;<br/>        y = &#x27;B&#x27;<br/>&gt;       assert write_insert(series, sequence, x, y) == f&quot;INSERT INTO SSAMPLES(SERIES, SEQUENCE, X, Y) VALUES({series}, {sequence}, &#x27;{x}&#x27;, &#x27;{y}&#x27;)&quot;<br/><span class="error">E       assert None == &quot;INSERT INTO SSAMPLES(SERIES, SEQUENCE, X, Y) VALUES(1, 2, &#x27;A&#x27;, &#x27;B&#x27;)&quot;</span><br/><span class="error">E        +  where None = write_insert(1, 2, &#x27;A&#x27;, &#x27;B&#x27;)</span><br/><br/>project_1_4/src/test_SqlScriptMakerWriteInsert.py:65: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>INSERT INTO SSAMPLES(SERIES, SEQUENCE, X, Y)VALUES(1, 2, &#x27;A&#x27;, &#x27;B&#x27;)
+<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">project_1_4/src/test_SqlScriptMakerWriteInsert.py::Test_SqlScriptMakerWriteInsert::test_insert_statement_with_empty_strings</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_SqlScriptMakerWriteInsert.Test_SqlScriptMakerWriteInsert object at 0x78061e0b48d0&gt;<br/><br/>    def test_insert_statement_with_empty_strings(self):<br/>        series = 1<br/>        sequence = 2<br/>        x = &#x27;&#x27;<br/>        y = &#x27;&#x27;<br/>&gt;       assert write_insert(series, sequence, x, y) == f&quot;INSERT INTO SSAMPLES(SERIES, SEQUENCE, X, Y) VALUES({series}, {sequence}, &#x27;{x}&#x27;, &#x27;{y}&#x27;)&quot;<br/><span class="error">E       assert None == &quot;INSERT INTO SSAMPLES(SERIES, SEQUENCE, X, Y) VALUES(1, 2, &#x27;&#x27;, &#x27;&#x27;)&quot;</span><br/><span class="error">E        +  where None = write_insert(1, 2, &#x27;&#x27;, &#x27;&#x27;)</span><br/><br/>project_1_4/src/test_SqlScriptMakerWriteInsert.py:72: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>INSERT INTO SSAMPLES(SERIES, SEQUENCE, X, Y)VALUES(1, 2, &#x27;&#x27;, &#x27;&#x27;)
+<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">project_1_4/src/test_SqlScriptMakerWriteInsert.py::Test_SqlScriptMakerWriteInsert::test_insert_statement_with_large_strings</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_SqlScriptMakerWriteInsert.Test_SqlScriptMakerWriteInsert object at 0x78061e0b4978&gt;<br/><br/>    def test_insert_statement_with_large_strings(self):<br/>        series = 1<br/>        sequence = 2<br/>        x = &#x27;A&#x27;*5000<br/>        y = &#x27;B&#x27;*5000<br/>&gt;       assert write_insert(series, sequence, x, y) == f&quot;INSERT INTO SSAMPLES(SERIES, SEQUENCE, X, Y) VALUES({series}, {sequence}, &#x27;{x}&#x27;, &#x27;{y}&#x27;)&quot;<br/><span class="error">E       assert None == &quot;INSERT INTO SSAMPLES(SERIES, SEQUENCE, X, Y) VALUES(1, 2, &#x27;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA...BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB&#x27;)&quot;</span><br/><span class="error">E        +  where None = write_insert(1, 2, &#x27;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA...AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&#x27;, &#x27;BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB...BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB&#x27;)</span><br/><br/>project_1_4/src/test_SqlScriptMakerWriteInsert.py:79: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>INSERT INTO SSAMPLES(SERIES, SEQUENCE, X, Y)VALUES(1, 2, &#x27;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&#x27;, &#x27;BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB&#x27;)
+<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">project_1_4/src/test_SqlScriptMakerWriteInsert.py::Test_SqlScriptMakerWriteInsert::test_insert_statement_with_special_chars</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_SqlScriptMakerWriteInsert.Test_SqlScriptMakerWriteInsert object at 0x78061e0b4c18&gt;<br/><br/>    def test_insert_statement_with_special_chars(self):<br/>        series = 1<br/>        sequence = 2<br/>        x = &#x27;A%&amp;/()=?&#x27;<br/>        y = &#x27;B%&amp;/()=?&#x27;<br/>&gt;       assert write_insert(series, sequence, x, y) == f&quot;INSERT INTO SSAMPLES(SERIES, SEQUENCE, X, Y) VALUES({series}, {sequence}, &#x27;{x}&#x27;, &#x27;{y}&#x27;)&quot;<br/><span class="error">E       assert None == &quot;INSERT INTO SSAMPLES(SERIES, SEQUENCE, X, Y) VALUES(1, 2, &#x27;A%&amp;/()=?&#x27;, &#x27;B%&amp;/()=?&#x27;)&quot;</span><br/><span class="error">E        +  where None = write_insert(1, 2, &#x27;A%&amp;/()=?&#x27;, &#x27;B%&amp;/()=?&#x27;)</span><br/><br/>project_1_4/src/test_SqlScriptMakerWriteInsert.py:86: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>INSERT INTO SSAMPLES(SERIES, SEQUENCE, X, Y)VALUES(1, 2, &#x27;A%&amp;/()=?&#x27;, &#x27;B%&amp;/()=?&#x27;)
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">project_1_1/src/test_ExtractInit.py::Test_ExtractInit::test_init_correctly_sets_builders</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">project_1_1/src/test_ExtractInit.py::Test_ExtractInit::test_empty_builders_list</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">project_1_2/tests/test_EnvironmentAfterScenario.py::Test_EnvironmentAfterScenario::test_context_type[context0-scenario0]</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">project_1_2/tests/test_EnvironmentAfterScenario.py::Test_EnvironmentAfterScenario::test_temp_path_deletion</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody></table></body></html>

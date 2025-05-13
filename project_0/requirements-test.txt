@@ -51,3 +51,5 @@ tox==4.9.0
     # via project-0 (pyproject.toml)
 virtualenv==20.24.3
     # via tox
+
+pytest

@@ -1,3 +1,12 @@
+
+# ********RoostGPT********
+"""
+
+roost_feedback [16/07/2025, 6:18:11 PM]:Improve\stest
+"""
+
+# ********RoostGPT********
+
 import pytest
 import argparse
 import sys
@@ -78,5 +87,35 @@ class TestHwMain:
             passed_greeting_execution = False
 
         # Assert: Ensure that function handles missing arguments gracefully
-        assert not passed_name_execution, "Function should handle missing `--name` argument gracefully."
-        assert not passed_greeting_execution, "Function should handle missing `--greeting` argument gracefully."
+        assert not passed_name_execution, 'Function should handle missing "--name" argument gracefully.'
+        assert not passed_greeting_execution, 'Function should handle missing "--greeting" argument gracefully.'
+
+    @pytest.mark.edgecase
+    @pytest.mark.regression
+    def test_main_empty_string_arguments(self):
+        # Arrange: Passing empty string arguments
+        argv_empty = ["--name", "", "--greeting", ""]
+        # Act: Call the main function
+        try:
+            main(argv_empty)
+            passed_execution = True
+        except Exception:
+            passed_execution = False
+        # Assert: Ensure the function handles empty string arguments gracefully
+        assert not passed_execution, "Function should not accept empty string arguments."
+        
+    @pytest.mark.performance
+    @pytest.mark.regression
+    def test_main_large_input_arguments(self):
+        # Arrange: Passing unusually large input values
+        large_name = "x" * 10000
+        large_greeting = "y" * 10000
+        argv_large = ["--name", large_name, "--greeting", large_greeting]
+        # Act: Call the main function
+        try:
+            main(argv_large)
+            passed_execution = True
+        except Exception:
+            passed_execution = False
+        # Assert: Ensure the function handles large input arguments gracefully
+        assert passed_execution, "Function should handle large input arguments without crashing."
